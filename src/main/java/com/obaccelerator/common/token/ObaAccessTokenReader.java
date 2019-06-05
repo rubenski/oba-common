@@ -57,11 +57,15 @@ public class ObaAccessTokenReader {
     }
 
     public boolean verifySignature(final String token, final String publicKey) throws ObaAccessTokenException {
+        return verifySignature(token, stringToPublicKey(publicKey));
+    }
+
+    public boolean verifySignature(final String token, final PublicKey publicKey) throws ObaAccessTokenException {
         JsonWebSignature jws = new JsonWebSignature();
         jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, AlgorithmIdentifiers.RSA_USING_SHA512));
         try {
             jws.setCompactSerialization(token);
-            jws.setKey(stringToPublicKey(publicKey));
+            jws.setKey(publicKey);
             return jws.verifySignature();
         } catch (JoseException e) {
             throw new ObaAccessTokenException("Exception while verifying token. This doesn't happen because the signature was not valid", e);

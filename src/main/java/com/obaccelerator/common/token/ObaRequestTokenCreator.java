@@ -2,9 +2,6 @@ package com.obaccelerator.common.token;
 
 import org.jose4j.jwt.JwtClaims;
 
-import java.security.KeyStore;
-import java.time.Instant;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -24,9 +21,7 @@ public class ObaRequestTokenCreator extends TokenCreator {
      */
     public static ObaRequestTokenCreator forPfx(String pfxPath, String pfxPassword, String privateKeyAlias) {
         ObaRequestTokenCreator util = new ObaRequestTokenCreator();
-        KeyStore keyStore = PfxUtil.loadKeyStore(pfxPath, pfxPassword);
-        PfxUtil pfxUtil = new PfxUtil(pfxPath, pfxPassword);
-        util.privateKey = pfxUtil.getPrivateKey(privateKeyAlias);
+        util.privateKey = new PfxUtil(pfxPath, pfxPassword).getPrivateKey(privateKeyAlias);
         return util;
     }
 

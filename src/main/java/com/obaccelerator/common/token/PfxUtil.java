@@ -11,7 +11,6 @@ public class PfxUtil {
     private KeyStore keyStore;
     private String pfxPassword;
 
-
     public PfxUtil(final String pfxPath, final String pfxPassword) {
         this.pfxPassword = pfxPassword;
         keyStore = loadKeyStore(pfxPath, pfxPassword);
@@ -25,12 +24,11 @@ public class PfxUtil {
         }
     }
 
-
     public PublicKey getPublicKey(String alias) {
         return getCertificate(alias).getPublicKey();
     }
 
-    public static KeyStore loadKeyStore(String pfxPath, String pfxPassword) {
+    private  KeyStore loadKeyStore(String pfxPath, String pfxPassword) {
         InputStream keyFile = ObaAccessTokenCreator.class.getResourceAsStream(pfxPath);
         if (keyFile == null) {
             throw new RuntimeException("Could not find " + pfxPath);
