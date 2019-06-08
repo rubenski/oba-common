@@ -107,7 +107,7 @@ public class ObaApiTokenReader {
             jws.setKey(publicKey);
             return jws.verifySignature();
         } catch (JoseException e) {
-            throw new ApiTokenException("Exception while verifying token. This doesn't happen because the signature was not valid. Likely the token could not be parsed", e);
+            throw new ApiTokenException("Could not parse token", e);
         }
     }
 
