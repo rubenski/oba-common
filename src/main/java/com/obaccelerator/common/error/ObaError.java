@@ -20,7 +20,8 @@ public enum ObaError {
     GATEWAY_API_TOKEN_EXPIRED("GTW003", "API token expired", 400),
     GATEWAY_API_TOKEN_INVALID("GTW004", "API token invalid", 400),
 
-    TECHNICAL_ERROR("OBA001", "A technical error occurred", 500);
+    OBA_TECHNICAL_ERROR("OBA001", "A technical error occurred", 500),
+    OBA_DATA_ACCESS_EXCEPTION("OBA002", "A technical error occurred", 500);
 
 
     private final String code;
