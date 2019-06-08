@@ -5,4 +5,8 @@ public class ObaApiTokenException extends Exception {
     public ObaApiTokenException(String s, Throwable throwable) {
         super(s, throwable);
     }
+
+    public ObaApiTokenException(String s) {
+        super(s);
+    }
 }

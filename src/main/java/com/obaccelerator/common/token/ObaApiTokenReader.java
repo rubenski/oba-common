@@ -16,29 +16,37 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ObaApiTokenReader {
 
+    private static final String TOKEN_INVALID_MESSAGE_CLAIMS = "Token invalid: wrong number of claims";
+    private static final String TOKEN_INVALID_MESSAGE_UUID = "Token invalid: cannot parse client UUID";
+    private static final String TOKEN_EXPIRED_MESSAGE = "Token expired";
 
-    public Map<String, Object> readClaims(String token, PublicKey publicKey) throws InvalidJwtException {
+
+    public Map<String, Object> readClaims(String token, PublicKey publicKey) throws ObaApiTokenException {
         JwtConsumer consumer = new JwtConsumerBuilder().setVerificationKey(publicKey)
                 .build();
-        JwtClaims jwtClaims = consumer.processToClaims(token);
+
+        JwtClaims jwtClaims = null;
+        try {
+            jwtClaims = consumer.processToClaims(token);
+        } catch (InvalidJwtException e) {
+            throw new ObaApiTokenException("invalid token", e);
+        }
+
         Map<String, Object> claims = new HashMap<>();
         jwtClaims.getClaimsMap().forEach(claims::put);
         return claims;
     }
 
-    public Optional<String> readClaim(String token, String claim, PublicKey publicKey) throws InvalidJwtException {
+    public Optional<String> readClaim(String token, String claim, PublicKey publicKey) throws ObaApiTokenException {
         return Optional.ofNullable((String) readClaims(token, publicKey).get(claim));
     }
 
 
-    public Optional<String> readClaim(String token, String claim, String publicKey) throws InvalidJwtException {
+    public Optional<String> readClaim(String token, String claim, String publicKey) throws ObaApiTokenException {
         return Optional.ofNullable((String) readClaims(token, stringToPublicKey(publicKey)).get(claim));
     }
 
@@ -58,6 +66,33 @@ public class ObaApiTokenReader {
 
     public boolean verifySignature(final String token, final String publicKey) throws ObaApiTokenException {
         return verifySignature(token, stringToPublicKey(publicKey));
+    }
+
+    public void validateToken(final String token, final PublicKey publicKey) throws ObaApiTokenException {
+        Map<String, Object> claims = readClaims(token, publicKey);
+
+        // Are all expected fields present?
+        Object iat = claims.get("iat");
+        Object clientId = claims.get("client_id");
+        Object jti = claims.get("jti");
+        Object exp = claims.get("exp");
+
+        if (claims.size() != 4 || iat == null || clientId == null || jti == null || exp == null) {
+            throw new ObaApiTokenValidationException(TOKEN_INVALID_MESSAGE_CLAIMS);
+        }
+
+        // Is the client_id a real UUID?
+        try {
+            UUID.fromString((String) clientId);
+        } catch (RuntimeException e) {
+            throw new ObaApiTokenValidationException(TOKEN_INVALID_MESSAGE_UUID);
+        }
+
+        // Is the token expired?
+        long expTime = (long) exp;
+        if (expTime < System.currentTimeMillis()) {
+            throw new ObaApiTokenExpiredException(TOKEN_EXPIRED_MESSAGE);
+        }
     }
 
     public boolean verifySignature(final String token, final PublicKey publicKey) throws ObaApiTokenException {
