@@ -7,12 +7,10 @@ import java.util.UUID;
 
 
 @Slf4j
-public class ObaAccessTokenCreator extends TokenCreator {
+public class ObaApiTokenCreator extends TokenCreator {
 
-    private static final int TOKEN_VALIDITY_PERIOD_MS = 30 * 60 * 1000;
-
-    public static ObaAccessTokenCreator forPfx(String pfxPath, String pfxPassword, String privateKeyAlias) {
-        ObaAccessTokenCreator util = new ObaAccessTokenCreator();
+    public static ObaApiTokenCreator forPfx(String pfxPath, String pfxPassword, String privateKeyAlias) {
+        ObaApiTokenCreator util = new ObaApiTokenCreator();
         util.privateKey = new PfxUtil(pfxPath, pfxPassword).getPrivateKey(privateKeyAlias);
         return util;
     }
@@ -23,12 +21,12 @@ public class ObaAccessTokenCreator extends TokenCreator {
      * @param clientId
      * @return
      */
-    public String createObaAccessToken(String clientId) {
+    public String createObaAccessToken(String clientId, long validityMinutes) {
         final long millis = System.currentTimeMillis();
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("client_id", clientId);
         jwtClaims.setClaim("iat", millis);
-        jwtClaims.setClaim("exp", millis + TOKEN_VALIDITY_PERIOD_MS);
+        jwtClaims.setClaim("exp", millis + validityMinutes * 60 * 1000);
         jwtClaims.setClaim("jti", UUID.randomUUID());
         return createTokenFromClaims(jwtClaims);
     }

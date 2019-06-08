@@ -29,7 +29,7 @@ public class PfxUtil {
     }
 
     private  KeyStore loadKeyStore(String pfxPath, String pfxPassword) {
-        InputStream keyFile = ObaAccessTokenCreator.class.getResourceAsStream(pfxPath);
+        InputStream keyFile = ObaApiTokenCreator.class.getResourceAsStream(pfxPath);
         if (keyFile == null) {
             throw new RuntimeException("Could not find " + pfxPath);
         }

@@ -5,29 +5,28 @@ import lombok.Getter;
 @Getter
 public enum ObaError {
 
-    USER_CREATION_FAILED("USR", "001", "User creation failed", 500),
+    USER_CREATION_FAILED("USR001", "User creation failed", 500),
 
-    TOKEN_INVALID("TKN", "001", "Token validation failed", 400),
-    TOKEN_REQUEST_HAS_NO_KID_HEADER("TKN", "002", "KID header missing in jws request", 400),
-    TOKEN_REQUEST_HAS_NO_CLIENT_ID_CLAIM("TKN", "003", "Client id claim is missing from jws request", 400),
-    TOKEN_NO_KEY_FOUND_FOR_KID("TKN", "004", "KID sent in kid header doesn't exist at OBA", 400),
-    TOKEN_REQUEST_TOKEN_SIGNATURE_INVALID("TKN", "005", "Request token signature is invalid", 400),
-    TOKEN_CLIENT_ID_DOESNT_EXIST("TKN", "006", "The client id provided in the request token does not exist at OBA", 400),
-    TOKEN_REQUEST_TOKEN_PROCESSING_ERROR("TKN", "007", "Unable to process request token", 400),
+    TOKEN_INVALID("TKN001", "Token validation failed", 400),
+    TOKEN_REQUEST_HAS_NO_KID_HEADER("TKN002", "KID header missing in jws request", 400),
+    TOKEN_REQUEST_HAS_NO_CLIENT_ID_CLAIM("TKN003", "Client id claim is missing from jws request", 400),
+    TOKEN_NO_KEY_FOUND_FOR_KID("TKN004", "KID sent in kid header doesn't exist at OBA", 400),
+    TOKEN_REQUEST_TOKEN_SIGNATURE_INVALID("TKN005", "Request token signature is invalid", 400),
+    TOKEN_CLIENT_ID_DOESNT_EXIST("TKN006", "The client id provided in the request token does not exist at OBA", 400),
+    TOKEN_REQUEST_TOKEN_PROCESSING_ERROR("TKN007", "Unable to process request token", 400),
 
-    GATEWAY_ACCESS_TOKEN_SIGNATURE_INVALID("GTW", "001", "Access token signature is invalid", 403),
-    GATEWAY_ACCESS_TOKEN_PROCESSING_ERROR("GTW", "002", "Unable to process access token", 400),
+    GATEWAY_ACCESS_TOKEN_SIGNATURE_INVALID("GTW001", "Access token signature is invalid", 403),
+    GATEWAY_ACCESS_TOKEN_PROCESSING_ERROR("GTW002", "Unable to process access token", 400),
 
-    TECHNICAL_ERROR("OBA", "001", "A technical error occurred", 500);
+    TECHNICAL_ERROR("OBA001", "A technical error occurred", 500);
 
-    private final String prefix;
-    private final String number;
+
+    private final String code;
     private String message;
     private int httpStatus;
 
-    ObaError(String prefix, String number, String message, int httpStatus) {
-        this.prefix = prefix;
-        this.number = number;
+    ObaError(String code,  String message, int httpStatus) {
+        this.code = code;
         this.message = message;
         this.httpStatus = httpStatus;
     }

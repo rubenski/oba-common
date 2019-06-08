@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ObaAccessTokenReader {
+public class ObaApiTokenReader {
 
 
     public Map<String, Object> readClaims(String token, PublicKey publicKey) throws InvalidJwtException {
@@ -56,11 +56,11 @@ public class ObaAccessTokenReader {
         return findStringHeader(token, header, jwtConsumer);
     }
 
-    public boolean verifySignature(final String token, final String publicKey) throws ObaAccessTokenException {
+    public boolean verifySignature(final String token, final String publicKey) throws ObaApiTokenException {
         return verifySignature(token, stringToPublicKey(publicKey));
     }
 
-    public boolean verifySignature(final String token, final PublicKey publicKey) throws ObaAccessTokenException {
+    public boolean verifySignature(final String token, final PublicKey publicKey) throws ObaApiTokenException {
         JsonWebSignature jws = new JsonWebSignature();
         jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, AlgorithmIdentifiers.RSA_USING_SHA512));
         try {
@@ -68,7 +68,7 @@ public class ObaAccessTokenReader {
             jws.setKey(publicKey);
             return jws.verifySignature();
         } catch (JoseException e) {
-            throw new ObaAccessTokenException("Exception while verifying token. This doesn't happen because the signature was not valid", e);
+            throw new ObaApiTokenException("Exception while verifying token. This doesn't happen because the signature was not valid", e);
         }
     }
 

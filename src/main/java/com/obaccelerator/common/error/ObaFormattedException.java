@@ -10,13 +10,13 @@ public class ObaFormattedException extends RuntimeException {
 
     public ObaFormattedException(ObaError obaError, Exception rootException) {
         super(rootException);
-        this.code = obaError.getPrefix() + obaError.getNumber();
+        this.code = obaError.getCode();
         this.message = obaError.getMessage();
         this.httpStatus = obaError.getHttpStatus();
     }
 
     public ObaFormattedException(ObaError obaError) {
-        this.code = obaError.getPrefix() + obaError.getNumber();
+        this.code = obaError.getCode();
         this.message = obaError.getMessage();
         this.httpStatus = obaError.getHttpStatus();
     }
