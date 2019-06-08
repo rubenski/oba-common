@@ -21,7 +21,7 @@ public class ObaApiTokenCreator extends TokenCreator {
      * @param clientId
      * @return
      */
-    public String createObaAccessToken(String clientId, long validityMinutes) {
+    public String createObaAccessToken(String clientId, int validityMinutes) {
         final long millis = System.currentTimeMillis();
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("client_id", clientId);
