@@ -13,7 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 public class ObaExceptionHandler {
 
 
-    @ExceptionHandler(value = {RuntimeException.class})
+    @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<ObaErrorMessage> handleRuntimeException(RuntimeException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_TECHNICAL_ERROR);
         return new ResponseEntity<>(errorMessage, HttpStatus.valueOf(errorMessage.getStatus()));
