@@ -38,7 +38,7 @@ public class TokenGenerator {
      * @param clientId id of the client
      * @return
      */
-    public String createRequestToken(String clientId, String kid) {
+    public String generateRequestToken(String clientId, String kid) {
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("client_id", clientId);
         jwtClaims.setClaim("iat", System.currentTimeMillis());
@@ -51,7 +51,7 @@ public class TokenGenerator {
         });
     }
 
-    public String createInternalToken(String clientId, String userId) {
+    public String generateInternalToken(String clientId, String userId) {
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("client_id", clientId);
         jwtClaims.setClaim("user_id", userId);
@@ -60,7 +60,7 @@ public class TokenGenerator {
         return createTokenFromClaims(jwtClaims);
     }
 
-    public String createInternalToken(String clientId) {
+    public String generateInternalToken(String clientId) {
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("client_id", clientId);
         jwtClaims.setClaim("iat", System.currentTimeMillis());
@@ -68,16 +68,15 @@ public class TokenGenerator {
         return createTokenFromClaims(jwtClaims);
     }
 
-    public String createApiToken(String clientId, int validitySeconds) {
+    public String generateApiToken(String clientId, int validityMinutes) {
         final long millis = System.currentTimeMillis();
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("client_id", clientId);
         jwtClaims.setClaim("iat", millis);
-        jwtClaims.setClaim("exp", millis + validitySeconds * 1000);
+        jwtClaims.setClaim("exp", millis + validityMinutes * 60 *  1000);
         jwtClaims.setClaim("jti", UUID.randomUUID());
         return createTokenFromClaims(jwtClaims);
     }
-
 
     private String createTokenFromClaims(JwtClaims jwtClaims) {
         String algorithm = AlgorithmIdentifiers.RSA_USING_SHA512;
