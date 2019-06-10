@@ -15,6 +15,8 @@ import java.lang.annotation.Annotation;
 import java.security.PublicKey;
 import java.util.Optional;
 
+import static com.obaccelerator.common.ObaConstant.INTERNAL_TOKEN_HEADER;
+
 /**
  * Argument resolver that takes the incoming internal-token JWT token, extracts the client_id claim and returns that
  * as a ObaRequestContext object. The ObaRequestContext object may grow woth new client-specific fields such as
@@ -39,7 +41,7 @@ public class ObaRequestContextMethodArgumentResolver implements HandlerMethodArg
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
-        String internalToken = webRequest.getHeader("internal-token");
+        String internalToken = webRequest.getHeader(INTERNAL_TOKEN_HEADER);
         TokenReader reader = new TokenReader();
         Optional<String> optionalClientId = reader.readClaim(internalToken, "client_id", publicKey);
         if (!optionalClientId.isPresent()) {
