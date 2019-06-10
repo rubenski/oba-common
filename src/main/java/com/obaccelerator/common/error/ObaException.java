@@ -11,13 +11,13 @@ public class ObaException extends RuntimeException {
     public ObaException(ObaError obaError, Exception rootException) {
         super(rootException);
         this.code = obaError.getCode();
-        this.message = obaError.getMessage();
+        this.message = obaError.getClientMessage();
         this.httpStatus = obaError.getHttpStatus();
     }
 
     public ObaException(ObaError obaError) {
         this.code = obaError.getCode();
-        this.message = obaError.getMessage();
+        this.message = obaError.getClientMessage();
         this.httpStatus = obaError.getHttpStatus();
     }
 }

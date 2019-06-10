@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,7 @@ public class ObaErrorMessage {
     public ObaErrorMessage(ObaError obaError) {
         this.status = obaError.getHttpStatus();
         this.code = obaError.getCode();
-        this.message = obaError.getMessage();
+        this.message = obaError.getClientMessage();
     }
 
     public ObaErrorMessage(ObaException obaException) {

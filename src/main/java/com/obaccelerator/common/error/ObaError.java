@@ -2,6 +2,8 @@ package com.obaccelerator.common.error;
 
 import lombok.Getter;
 
+import static com.obaccelerator.common.error.ObaError.GenericTechnicalError.GENERIC_TECHNICAL_ERROR;
+
 @Getter
 public enum ObaError {
 
@@ -20,17 +22,23 @@ public enum ObaError {
     GATEWAY_API_TOKEN_EXPIRED("GTW003", "API token expired", 400),
     GATEWAY_API_TOKEN_INVALID("GTW004", "API token invalid", 400),
 
-    OBA_TECHNICAL_ERROR("OBA001", "A technical error occurred", 500),
-    OBA_DATA_ACCESS_EXCEPTION("OBA002", "A technical error occurred", 500);
+    OBA_TECHNICAL_ERROR("OBA001", GENERIC_TECHNICAL_ERROR, 500),
+    OBA_DATA_ACCESS_EXCEPTION("OBA002", GENERIC_TECHNICAL_ERROR, 500),
+    OBA_INVALID_INTERNAL_TOKEN("OBA003", GENERIC_TECHNICAL_ERROR, 500);
 
 
     private final String code;
-    private String message;
+    private String clientMessage;
     private int httpStatus;
 
-    ObaError(String code,  String message, int httpStatus) {
+    // Java magic below (avoid illegal forward reference by adding static inner class)
+    public static class GenericTechnicalError {
+        public static final String GENERIC_TECHNICAL_ERROR = "Technical error";
+    }
+
+    ObaError(String code, String clientMessage, int httpStatus) {
         this.code = code;
-        this.message = message;
+        this.clientMessage = clientMessage;
         this.httpStatus = httpStatus;
     }
 }

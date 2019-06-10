@@ -16,6 +16,8 @@ import java.util.UUID;
 @Slf4j
 public class TokenGenerator {
 
+    private static final String ALGORITHM = AlgorithmIdentifiers.RSA_USING_SHA512;
+
 
     private static final long INTERNAL_TOKEN_VALIDITY_MS = 10000;
 
@@ -79,12 +81,12 @@ public class TokenGenerator {
     }
 
     private String createTokenFromClaims(JwtClaims jwtClaims) {
-        String algorithm = AlgorithmIdentifiers.RSA_USING_SHA512;
+
         JsonWebSignature jws = new JsonWebSignature();
         jws.setPayload(jwtClaims.toJson());
         jws.setKey(privateKey);
-        jws.setAlgorithmHeaderValue(algorithm);
-        jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, algorithm));
+        jws.setAlgorithmHeaderValue(ALGORITHM);
+        jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, ALGORITHM));
 
         try {
             return jws.getCompactSerialization();
@@ -97,7 +99,8 @@ public class TokenGenerator {
         JsonWebSignature jws = new JsonWebSignature();
         jws.setPayload(jwtClaims.toJson());
         jws.setKey(privateKey);
-        jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA512);
+        jws.setAlgorithmHeaderValue(ALGORITHM);
+        jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, ALGORITHM));
 
         for (String s : headers.keySet()) {
             jws.setHeader(s, headers.get(s));
