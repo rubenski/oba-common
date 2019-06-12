@@ -14,11 +14,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <jjwt.version>0.9.1</jjwt.version>
-        <spring.web.version>5.1.7.RELEASE</spring.web.version>
+        <spring.version>5.1.7.RELEASE</spring.version>
         <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
         <lombok.version>1.18.8</lombok.version>
         <servlet.api.version>2.5</servlet.api.version>
         <spring.cloud.vault.version>2.1.1.RELEASE</spring.cloud.vault.version>
+        <mysql.driver.version>8.0.16</mysql.driver.version>
     </properties>
 
     <dependencies>
@@ -43,7 +44,16 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <version>${spring.boot.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.driver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -53,19 +63,19 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.web.version}</version>
+            <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>${spring.web.version}</version>
+            <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
-            <version>${spring.web.version}</version>
+            <version>${spring.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -80,10 +90,6 @@
             <version>${servlet.api.version}</version>
             <scope>provided</scope>
         </dependency>
-
-
-
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>

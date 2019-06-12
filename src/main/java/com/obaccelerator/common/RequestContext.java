@@ -1,4 +1,4 @@
-package com.obaccelerator.common.spring;
+package com.obaccelerator.common;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

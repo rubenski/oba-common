@@ -1,7 +1,5 @@
 package com.obaccelerator.common.error;
 
-import com.obaccelerator.common.error.ObaErrorMessage;
-import com.obaccelerator.common.error.ObaException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
@@ -26,8 +24,8 @@ import java.util.Map;
  * contained errors.
  */
 @Slf4j
-@Controller
 @RequestMapping("${server.error.path:${error.path:/error}}")
+@Controller
 public class ObaErrorController extends AbstractErrorController {
 
 

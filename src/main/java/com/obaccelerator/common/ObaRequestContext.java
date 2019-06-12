@@ -1,9 +1,8 @@
-package com.obaccelerator.common.spring;
+package com.obaccelerator.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Getter
