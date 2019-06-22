@@ -44,6 +44,9 @@ public class ObaRequestContextMethodArgumentResolver implements HandlerMethodArg
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 
         String internalToken = webRequest.getHeader(INTERNAL_TOKEN_HEADER);
+        if(internalToken == null) {
+            throw new ObaException(ObaError.OBA_MISSING_INTERNAL_TOKEN_HEADER);
+        }
         TokenReader reader = new TokenReader();
         Optional<String> optionalClientId = reader.readClaim(internalToken, "client_id", publicKey);
         if (!optionalClientId.isPresent()) {

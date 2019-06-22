@@ -1,9 +1,11 @@
 package com.obaccelerator.common.spring;
 
-import com.obaccelerator.common.endpoint.OpenEndpoint;
+import com.obaccelerator.common.endpoint.EndpointAccessType;
+import com.obaccelerator.common.endpoint.EndpointDef;
 import com.obaccelerator.common.error.ObaError;
 import com.obaccelerator.common.error.ObaException;
-import com.obaccelerator.common.token.ApiTokenException;
+import com.obaccelerator.common.token.ApiTokenProcessingException;
+import com.obaccelerator.common.token.ApiTokenSignatureValidationException;
 import com.obaccelerator.common.token.TokenReader;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -34,9 +36,10 @@ public class InternalTokenCheckerFilter extends OncePerRequestFilter {
         }
 
         TokenReader reader = new TokenReader();
+
         try {
             reader.verifySignature(token, internalTokenPublicKey);
-        } catch (ApiTokenException e) {
+        } catch (ApiTokenProcessingException | ApiTokenSignatureValidationException e) {
             throw new ServletException(e);
         }
 
@@ -45,6 +48,8 @@ public class InternalTokenCheckerFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return OpenEndpoint.isOpenEndpoint(request);
+        return !EndpointDef.getAccessType(request).equals(EndpointAccessType.OPEN);
     }
+
+
 }

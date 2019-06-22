@@ -39,7 +39,7 @@ public class ObaErrorMessage {
     public ObaErrorMessage(ObaException obaException) {
         this.status = obaException.getHttpStatus();
         this.code = obaException.getCode();
-        this.message = obaException.getMessage();
+        this.message = obaException.getClientMessage();
     }
 
     public void addFieldErrors(Map<String, String> fieldErrors) {

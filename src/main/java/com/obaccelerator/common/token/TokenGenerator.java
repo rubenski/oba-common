@@ -19,7 +19,9 @@ public class TokenGenerator {
     private static final String ALGORITHM = AlgorithmIdentifiers.RSA_USING_SHA512;
 
 
-    private static final long INTERNAL_TOKEN_VALIDITY_MS = 10000;
+    private static final long INTERNAL_TOKEN_VALIDITY_MS = 10 * 1000;
+    private static final long ELEVATED_TOKEN_VALIDITY_MS = 60 * 60 * 1000;
+    private static final long API_TOKEN_VALIDITY_MS = 10 * 60 * 1000;
 
     protected Key privateKey;
 
@@ -31,10 +33,10 @@ public class TokenGenerator {
      * There are some rules for client tokens. They must have an iat (issued at) claim. The issued at time cannot
      * be more than 20 seconds in the past. Also, it cannot be in the future. That is, we invalidate tokens on the Oba
      * side in order to prevent a client from losing a long-lived token.
-     *
+     * <p>
      * The jti (JWD IT) claim should be set as well. Oba should check that a token is only used once, but this is a
      * bit of a nice to have as the max validity period is already limited to only 20 seconds.
-     *
+     * <p>
      * The token must contain a key id header
      *
      * @param clientId id of the client
@@ -54,28 +56,39 @@ public class TokenGenerator {
     }
 
     public String generateInternalToken(String clientId, String userId) {
+        final long millis = System.currentTimeMillis();
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("client_id", clientId);
         jwtClaims.setClaim("user_id", userId);
-        jwtClaims.setClaim("iat", System.currentTimeMillis());
-        jwtClaims.setClaim("exp", System.currentTimeMillis() + INTERNAL_TOKEN_VALIDITY_MS); // valid for 10s
+        jwtClaims.setClaim("iat", millis);
+        jwtClaims.setClaim("exp", millis + INTERNAL_TOKEN_VALIDITY_MS); // valid for 10s
         return createTokenFromClaims(jwtClaims);
     }
 
     public String generateInternalToken(String clientId) {
-        JwtClaims jwtClaims = new JwtClaims();
-        jwtClaims.setClaim("client_id", clientId);
-        jwtClaims.setClaim("iat", System.currentTimeMillis());
-        jwtClaims.setClaim("exp", System.currentTimeMillis() + INTERNAL_TOKEN_VALIDITY_MS); // valid for 10s
-        return createTokenFromClaims(jwtClaims);
-    }
-
-    public String generateApiToken(String clientId, int validityMinutes) {
         final long millis = System.currentTimeMillis();
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("client_id", clientId);
         jwtClaims.setClaim("iat", millis);
-        jwtClaims.setClaim("exp", millis + validityMinutes * 60 *  1000);
+        jwtClaims.setClaim("exp", millis + INTERNAL_TOKEN_VALIDITY_MS); // valid for 10s
+        return createTokenFromClaims(jwtClaims);
+    }
+
+    public String generateElevatedToken(String externalRoleName) {
+        final long millis = System.currentTimeMillis();
+        JwtClaims jwtClaims = new JwtClaims();
+        jwtClaims.setClaim("iat", millis);
+        jwtClaims.setClaim("exp", millis + ELEVATED_TOKEN_VALIDITY_MS); // valid for 1 hour
+        jwtClaims.setClaim("role", externalRoleName);
+        return createTokenFromClaims(jwtClaims);
+    }
+
+    public String generateApiToken(String clientId) {
+        final long millis = System.currentTimeMillis();
+        JwtClaims jwtClaims = new JwtClaims();
+        jwtClaims.setClaim("client_id", clientId);
+        jwtClaims.setClaim("iat", millis);
+        jwtClaims.setClaim("exp", millis + API_TOKEN_VALIDITY_MS); // valid for 10 minutes
         jwtClaims.setClaim("jti", UUID.randomUUID());
         return createTokenFromClaims(jwtClaims);
     }

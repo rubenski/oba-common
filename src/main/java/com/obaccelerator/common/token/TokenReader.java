@@ -17,12 +17,18 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TokenReader {
 
+    private static final String TOKEN_EXCEPTION = "Token processing exception";
+
+    private static final JwtConsumer UNSAFE_JWT_CONSUMER = new JwtConsumerBuilder()
+            .setSkipSignatureVerification()
+            .build();
 
 
-    public Map<String, Object> readClaims(String token, PublicKey publicKey) throws ApiTokenException {
+    public Map<String, Object> readClaims(String token, PublicKey publicKey) throws ApiTokenProcessingException {
         JwtConsumer consumer = new JwtConsumerBuilder().setVerificationKey(publicKey)
                 .build();
 
@@ -30,7 +36,7 @@ public class TokenReader {
         try {
             jwtClaims = consumer.processToClaims(token);
         } catch (InvalidJwtException e) {
-            throw new ApiTokenException("invalid token", e);
+            processingException(e);
         }
 
         Map<String, Object> claims = new HashMap<>();
@@ -38,53 +44,77 @@ public class TokenReader {
         return claims;
     }
 
-    public Optional<String> readClaim(String token, String claim, PublicKey publicKey) throws ApiTokenException {
+    public Optional<String> readClaim(String token, String claim, PublicKey publicKey) throws ApiTokenProcessingException {
         return Optional.ofNullable((String) readClaims(token, publicKey).get(claim));
     }
 
 
-    public Optional<String> readClaim(String token, String claim, String publicKey) throws ApiTokenException {
+    public Optional<String> readClaim(String token, String claim, String publicKey) throws ApiTokenProcessingException {
         return Optional.ofNullable((String) readClaims(token, stringToPublicKey(publicKey)).get(claim));
     }
 
-    public Optional<String> readHeader(String token, String header, PublicKey publicKey) throws InvalidJwtException {
+    public Optional<String> readHeader(String token, String header, PublicKey publicKey) throws ApiTokenProcessingException {
         JwtConsumer jwtConsumer = new JwtConsumerBuilder()
                 .setVerificationKey(publicKey)
                 .build();
         return findStringHeader(token, header, jwtConsumer);
     }
 
-    public Optional<String> readHeaderWithoutSignatureVerification(final String token, final String header) throws InvalidJwtException {
-        JwtConsumer jwtConsumer = new JwtConsumerBuilder()
-                .setSkipSignatureVerification()
-                .build();
-        return findStringHeader(token, header, jwtConsumer);
+    public Optional<String> readHeaderWithoutSignatureVerification(final String token, final String header) throws ApiTokenProcessingException {
+        return findStringHeader(token, header, UNSAFE_JWT_CONSUMER);
     }
 
-    public boolean verifySignature(final String token, final PublicKey publicKey) throws ApiTokenException {
+    public Optional<String> readClaimWithoutSignatureVerification(final String token, final String claim) throws ApiTokenProcessingException {
+        try {
+            return Optional.ofNullable((String) UNSAFE_JWT_CONSUMER.processToClaims(token).getClaimsMap().get(claim));
+        } catch (InvalidJwtException e) {
+            processingException(e);
+        }
+
+        return Optional.empty();
+    }
+
+    public Map<String, String> readClaimsWithoutSignatureVerification(final String token) throws ApiTokenProcessingException {
+        try {
+            return UNSAFE_JWT_CONSUMER.processToClaims(token).getClaimsMap().entrySet().stream()
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> (String) e.getValue()));
+        } catch (InvalidJwtException e) {
+            processingException(e);
+        }
+
+        return null;
+    }
+
+    public void verifySignature(final String token, final PublicKey publicKey) throws ApiTokenProcessingException, ApiTokenSignatureValidationException {
         JsonWebSignature jws = new JsonWebSignature();
         jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, AlgorithmIdentifiers.RSA_USING_SHA512));
         try {
             jws.setCompactSerialization(token);
             jws.setKey(publicKey);
-            return jws.verifySignature();
+            boolean b = jws.verifySignature();
+            if (!b) {
+                throw new ApiTokenSignatureValidationException();
+            }
         } catch (JoseException e) {
-            throw new ApiTokenException("Could not parse token", e);
+            processingException(e);
         }
     }
 
-    public boolean verifySignature(final String token, final String publicKey) throws ApiTokenException {
-        return verifySignature(token, stringToPublicKey(publicKey));
+    public void verifySignature(final String token, final String publicKey) throws ApiTokenSignatureValidationException, ApiTokenProcessingException {
+        verifySignature(token, stringToPublicKey(publicKey));
     }
 
-    private Optional<String> findStringHeader(String token, String header, JwtConsumer jwtConsumer) throws InvalidJwtException {
-        JwtContext context = jwtConsumer.process(token);
+    private Optional<String> findStringHeader(String token, String header, JwtConsumer jwtConsumer) throws ApiTokenProcessingException {
+        JwtContext context = null;
+        try {
+            context = jwtConsumer.process(token);
+        } catch (InvalidJwtException e) {
+            processingException(e);
+        }
 
         for (JsonWebStructure jsonWebStructure : context.getJoseObjects()) {
             String headerObject = jsonWebStructure.getHeaders().getStringHeaderValue(header);
-            if (headerObject != null) {
-                return Optional.ofNullable(headerObject);
-            }
+            return Optional.ofNullable(headerObject);
         }
         return Optional.empty();
     }
@@ -101,6 +131,10 @@ public class TokenReader {
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void processingException(Exception e) throws ApiTokenProcessingException {
+        throw new ApiTokenProcessingException(TOKEN_EXCEPTION, e);
     }
 
 
