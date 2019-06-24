@@ -22,14 +22,26 @@ public enum EndpointDef {
         this.accessType = accessType;
     }
 
-    public static EndpointAccessType getAccessType(HttpServletRequest request) {
+    public static EndpointDef getEndpoint(HttpServletRequest request) throws EndpointUndefinedException {
         String requestUri = request.getRequestURI();
         String method = request.getMethod();
-        for (EndpointDef openEndpoint : EndpointDef.values()) {
-            if (requestUri.contains(openEndpoint.getPath()) && method.equals(openEndpoint.getMethod())) {
-                return openEndpoint.getAccessType();
+        for (EndpointDef endpoint : EndpointDef.values()) {
+            if (requestUri.contains(endpoint.getPath()) && method.equals(endpoint.getMethod())) {
+                return endpoint;
             }
         }
-        throw new RuntimeException("Could not resolve endpoint in EndpointDef");
+        throw new EndpointUndefinedException("Endpoint " + requestUri + " is undefined");
+    }
+
+    public boolean isOpen() {
+        return accessType.equals(EndpointAccessType.OPEN);
+    }
+
+    public boolean isAuthenticatedElevated() {
+        return accessType.equals(EndpointAccessType.AUTHENTICATED_ELEVATED);
+    }
+
+    public boolean isAuthenticatedClient() {
+        return accessType.equals(EndpointAccessType.AUTHENTICATED_CLIENT);
     }
 }

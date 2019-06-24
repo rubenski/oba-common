@@ -5,4 +5,5 @@ public class ObaConstant {
     public static final String INTERNAL_TOKEN_HEADER = "internal-token";
     public static final String ROLE_CLAIM = "role";
     public static final String CLIENT_ID_CLAIM = "client_id";
+
 }

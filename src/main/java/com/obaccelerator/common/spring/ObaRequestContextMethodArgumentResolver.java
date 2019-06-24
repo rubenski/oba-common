@@ -47,8 +47,8 @@ public class ObaRequestContextMethodArgumentResolver implements HandlerMethodArg
         if(internalToken == null) {
             throw new ObaException(ObaError.OBA_MISSING_INTERNAL_TOKEN_HEADER);
         }
-        TokenReader reader = new TokenReader();
-        Optional<String> optionalClientId = reader.readClaim(internalToken, "client_id", publicKey);
+
+        Optional<String> optionalClientId = TokenReader.readClaim(internalToken, "client_id", publicKey);
         if (!optionalClientId.isPresent()) {
             throw new ObaException(ObaError.OBA_INVALID_INTERNAL_TOKEN);
         }

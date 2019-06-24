@@ -20,6 +20,7 @@
         <servlet.api.version>2.5</servlet.api.version>
         <spring.cloud.vault.version>2.1.1.RELEASE</spring.cloud.vault.version>
         <mysql.driver.version>8.0.16</mysql.driver.version>
+        <apache.commons.lang.version>3.9</apache.commons.lang.version>
     </properties>
 
     <dependencies>
@@ -28,6 +29,12 @@
             <artifactId>jose4j</artifactId>
             <version>0.6.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.lang.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

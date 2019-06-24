@@ -11,15 +11,22 @@ import org.jose4j.jwt.consumer.JwtContext;
 import org.jose4j.jwx.JsonWebStructure;
 import org.jose4j.lang.JoseException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class TokenReader {
+
+    private TokenReader() {
+    }
 
     private static final String TOKEN_EXCEPTION = "Token processing exception";
 
@@ -28,7 +35,19 @@ public class TokenReader {
             .build();
 
 
-    public Map<String, Object> readClaims(String token, PublicKey publicKey) throws ApiTokenProcessingException {
+    public static Optional<String> getTokenFromHeader(HttpServletRequest request) {
+
+        String authorization = request.getHeader("Authorization");
+
+        if(authorization == null || authorization.length() == 0) {
+            return Optional.empty();
+        }
+
+        return Optional.of(authorization.replace("Bearer", "").trim());
+    }
+
+
+    public static Map<String, Object> readClaims(String token, PublicKey publicKey) throws ApiTokenProcessingException {
         JwtConsumer consumer = new JwtConsumerBuilder().setVerificationKey(publicKey)
                 .build();
 
@@ -44,27 +63,27 @@ public class TokenReader {
         return claims;
     }
 
-    public Optional<String> readClaim(String token, String claim, PublicKey publicKey) throws ApiTokenProcessingException {
+    public static Optional<String> readClaim(String token, String claim, PublicKey publicKey) throws ApiTokenProcessingException {
         return Optional.ofNullable((String) readClaims(token, publicKey).get(claim));
     }
 
 
-    public Optional<String> readClaim(String token, String claim, String publicKey) throws ApiTokenProcessingException {
+    public static Optional<String> readClaim(String token, String claim, String publicKey) throws ApiTokenProcessingException {
         return Optional.ofNullable((String) readClaims(token, stringToPublicKey(publicKey)).get(claim));
     }
 
-    public Optional<String> readHeader(String token, String header, PublicKey publicKey) throws ApiTokenProcessingException {
+    public static Optional<String> readHeader(String token, String header, PublicKey publicKey) throws ApiTokenProcessingException {
         JwtConsumer jwtConsumer = new JwtConsumerBuilder()
                 .setVerificationKey(publicKey)
                 .build();
         return findStringHeader(token, header, jwtConsumer);
     }
 
-    public Optional<String> readHeaderWithoutSignatureVerification(final String token, final String header) throws ApiTokenProcessingException {
+    public static Optional<String> readHeaderWithoutSignatureVerification(final String token, final String header) throws ApiTokenProcessingException {
         return findStringHeader(token, header, UNSAFE_JWT_CONSUMER);
     }
 
-    public Optional<String> readClaimWithoutSignatureVerification(final String token, final String claim) throws ApiTokenProcessingException {
+    public static Optional<String> readClaimWithoutSignatureVerification(final String token, final String claim) throws ApiTokenProcessingException {
         try {
             return Optional.ofNullable((String) UNSAFE_JWT_CONSUMER.processToClaims(token).getClaimsMap().get(claim));
         } catch (InvalidJwtException e) {
@@ -74,7 +93,7 @@ public class TokenReader {
         return Optional.empty();
     }
 
-    public Map<String, String> readClaimsWithoutSignatureVerification(final String token) throws ApiTokenProcessingException {
+    public static Map<String, String> readClaimsWithoutSignatureVerification(final String token) throws ApiTokenProcessingException {
         try {
             return UNSAFE_JWT_CONSUMER.processToClaims(token).getClaimsMap().entrySet().stream()
                     .collect(Collectors.toMap(e -> e.getKey(), e -> (String) e.getValue()));
@@ -85,7 +104,7 @@ public class TokenReader {
         return null;
     }
 
-    public void verifySignature(final String token, final PublicKey publicKey) throws ApiTokenProcessingException, ApiTokenSignatureValidationException {
+    public static void verifySignature(final String token, final PublicKey publicKey) throws ApiTokenProcessingException, ApiTokenSignatureValidationException {
         JsonWebSignature jws = new JsonWebSignature();
         jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, AlgorithmIdentifiers.RSA_USING_SHA512));
         try {
@@ -100,11 +119,11 @@ public class TokenReader {
         }
     }
 
-    public void verifySignature(final String token, final String publicKey) throws ApiTokenSignatureValidationException, ApiTokenProcessingException {
+    public static void verifySignature(final String token, final String publicKey) throws ApiTokenSignatureValidationException, ApiTokenProcessingException {
         verifySignature(token, stringToPublicKey(publicKey));
     }
 
-    private Optional<String> findStringHeader(String token, String header, JwtConsumer jwtConsumer) throws ApiTokenProcessingException {
+    private static Optional<String> findStringHeader(String token, String header, JwtConsumer jwtConsumer) throws ApiTokenProcessingException {
         JwtContext context = null;
         try {
             context = jwtConsumer.process(token);
@@ -120,7 +139,6 @@ public class TokenReader {
     }
 
     private static PublicKey stringToPublicKey(String keyString) {
-        //byte[] publicBytes = Base64.getDecoder().decode(keyString);
         String cleaned = keyString.replaceAll("\\n", "")
                 .replace("-----BEGIN PUBLIC KEY-----", "")
                 .replace("-----END PUBLIC KEY-----", "");

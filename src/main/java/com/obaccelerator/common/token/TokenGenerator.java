@@ -8,104 +8,71 @@ import org.jose4j.jwt.JwtClaims;
 import org.jose4j.lang.JoseException;
 
 import java.security.Key;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.obaccelerator.common.ObaConstant.CLIENT_ID_CLAIM;
+import static com.obaccelerator.common.ObaConstant.ROLE_CLAIM;
 
 @Slf4j
 public class TokenGenerator {
 
     private static final String ALGORITHM = AlgorithmIdentifiers.RSA_USING_SHA512;
-
-
     private static final long INTERNAL_TOKEN_VALIDITY_MS = 10 * 1000;
-    private static final long ELEVATED_TOKEN_VALIDITY_MS = 60 * 60 * 1000;
     private static final long API_TOKEN_VALIDITY_MS = 10 * 60 * 1000;
 
-    protected Key privateKey;
+    private Key privateKey;
 
     public TokenGenerator(String pfxPath, String pfxPassword, String privateKeyAlias) {
         privateKey = new PfxUtil(pfxPath, pfxPassword).getPrivateKey(privateKeyAlias);
     }
 
-    /**
-     * There are some rules for client tokens. They must have an iat (issued at) claim. The issued at time cannot
-     * be more than 20 seconds in the past. Also, it cannot be in the future. That is, we invalidate tokens on the Oba
-     * side in order to prevent a client from losing a long-lived token.
-     * <p>
-     * The jti (JWD IT) claim should be set as well. Oba should check that a token is only used once, but this is a
-     * bit of a nice to have as the max validity period is already limited to only 20 seconds.
-     * <p>
-     * The token must contain a key id header
-     *
-     * @param clientId id of the client
-     * @return
-     */
-    public String generateRequestToken(String clientId, String kid) {
+    public String generateApiToken(String clientId, String externalClientRoleName) {
+        return generateToken(API_TOKEN_VALIDITY_MS,
+                new HashMap<String, String>() {{
+                    put(CLIENT_ID_CLAIM, clientId);
+                    put(ROLE_CLAIM, externalClientRoleName);
+                }},
+                Collections.emptyMap());
+    }
+
+    public String generateInternalToken(String clientId, String internalClientRoleName) {
+        return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
+                new HashMap<String, String>() {{
+                    put(CLIENT_ID_CLAIM, clientId);
+                    put(ROLE_CLAIM, internalClientRoleName);
+                }},
+                Collections.emptyMap());
+    }
+
+    public String generateApiElevatedToken(String externalElevatedRoleName) {
+        return generateToken(API_TOKEN_VALIDITY_MS,
+                new HashMap<String, String>() {{
+                    put(ROLE_CLAIM, externalElevatedRoleName);
+                }},
+                Collections.emptyMap());
+    }
+
+    public String generateInternalElevatedToken(String internalElevatedRoleName) {
+        return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
+                new HashMap<String, String>() {{
+                    put(ROLE_CLAIM, internalElevatedRoleName);
+                }},
+                Collections.emptyMap());
+    }
+
+    public String generateToken(long validityMs, Map<String, String> additionalClaims, Map<String, String> headers) {
+        final long millis = System.currentTimeMillis();
         JwtClaims jwtClaims = new JwtClaims();
-        jwtClaims.setClaim("client_id", clientId);
-        jwtClaims.setClaim("iat", System.currentTimeMillis());
+        jwtClaims.setClaim("iat", millis);
+        jwtClaims.setClaim("exp", millis + validityMs); // valid for 10 minutes
         jwtClaims.setClaim("jti", UUID.randomUUID());
-
-        return createTokenFromClaims(jwtClaims, new HashMap<String, String>() {
-            {
-                put("kid", kid);
-            }
-        });
-    }
-
-    public String generateInternalToken(String clientId, String userId) {
-        final long millis = System.currentTimeMillis();
-        JwtClaims jwtClaims = new JwtClaims();
-        jwtClaims.setClaim("client_id", clientId);
-        jwtClaims.setClaim("user_id", userId);
-        jwtClaims.setClaim("iat", millis);
-        jwtClaims.setClaim("exp", millis + INTERNAL_TOKEN_VALIDITY_MS); // valid for 10s
-        return createTokenFromClaims(jwtClaims);
-    }
-
-    public String generateInternalToken(String clientId) {
-        final long millis = System.currentTimeMillis();
-        JwtClaims jwtClaims = new JwtClaims();
-        jwtClaims.setClaim("client_id", clientId);
-        jwtClaims.setClaim("iat", millis);
-        jwtClaims.setClaim("exp", millis + INTERNAL_TOKEN_VALIDITY_MS); // valid for 10s
-        return createTokenFromClaims(jwtClaims);
-    }
-
-    public String generateElevatedToken(String externalRoleName) {
-        final long millis = System.currentTimeMillis();
-        JwtClaims jwtClaims = new JwtClaims();
-        jwtClaims.setClaim("iat", millis);
-        jwtClaims.setClaim("exp", millis + ELEVATED_TOKEN_VALIDITY_MS); // valid for 1 hour
-        jwtClaims.setClaim("role", externalRoleName);
-        return createTokenFromClaims(jwtClaims);
-    }
-
-    public String generateApiToken(String clientId) {
-        final long millis = System.currentTimeMillis();
-        JwtClaims jwtClaims = new JwtClaims();
-        jwtClaims.setClaim("client_id", clientId);
-        jwtClaims.setClaim("iat", millis);
-        jwtClaims.setClaim("exp", millis + API_TOKEN_VALIDITY_MS); // valid for 10 minutes
-        jwtClaims.setClaim("jti", UUID.randomUUID());
-        return createTokenFromClaims(jwtClaims);
-    }
-
-    private String createTokenFromClaims(JwtClaims jwtClaims) {
-
-        JsonWebSignature jws = new JsonWebSignature();
-        jws.setPayload(jwtClaims.toJson());
-        jws.setKey(privateKey);
-        jws.setAlgorithmHeaderValue(ALGORITHM);
-        jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, ALGORITHM));
-
-        try {
-            return jws.getCompactSerialization();
-        } catch (JoseException e) {
-            throw new RuntimeException(e);
+        for (String s : additionalClaims.keySet()) {
+            jwtClaims.setClaim(s, additionalClaims.get(s));
         }
+        return createTokenFromClaims(jwtClaims, headers);
     }
 
     private String createTokenFromClaims(JwtClaims jwtClaims, Map<String, String> headers) {
