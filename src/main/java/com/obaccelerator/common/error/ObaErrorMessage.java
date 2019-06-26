@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ObaErrorMessage {
 
-    private LocalDateTime utcTimeStamp = DateUtil.utcLocalDateTime();
+    private OffsetDateTime timestamp = DateUtil.utcOffsetDateTimeNow();
     private List<FieldError> fieldErrors;
     private String errorCode;
     private String message;

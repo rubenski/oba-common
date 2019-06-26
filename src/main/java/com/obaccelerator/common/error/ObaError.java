@@ -28,7 +28,9 @@ public enum ObaError {
     OBA_DB_EXCEPTION("OBA002", GENERIC_TECHNICAL_ERROR, "Data access or SQL exception", 500),
     OBA_INVALID_INTERNAL_TOKEN("OBA003", GENERIC_TECHNICAL_ERROR, "Invalid internal token", 500),
     OBA_MISSING_INTERNAL_TOKEN_HEADER("OBA004", GENERIC_TECHNICAL_ERROR, "Missing internal token header", 500),
-    OBA_INVALID_CLIENT_REQUEST("OBA005", "Invalid client request", "Invalid client request", 400);
+    OBA_CLIENT_ERROR_INVALID_REQUEST("OBA005", "Invalid client request", "Invalid client request", 400),
+    OBA_ENTITY_NOT_FOUND("OBA006", "Entity not found", "Entity not found", 404),
+    OBA_CLIENT_ERROR_INVALID_UUID_PROVIDED("OBA007", "UUID invalid", "UUID invalid", 400);
 
     private final String code;
     private String clientMessage;

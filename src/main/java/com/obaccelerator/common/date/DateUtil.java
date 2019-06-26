@@ -1,9 +1,6 @@
 package com.obaccelerator.common.date;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
@@ -25,8 +22,16 @@ public class DateUtil {
         return ZonedDateTime.now(ZoneOffset.UTC).format(MYSQL_DATETIME_FORMATTER);
     }
 
-    public static LocalDateTime utcLocalDateTime() {
+    public static LocalDateTime utcLocalDateTimeNow() {
         return LocalDateTime.now(ZoneId.of("UTC"));
+    }
+
+    public static OffsetDateTime offsetDateTimeNow() {
+        return ZonedDateTime.now().toOffsetDateTime();
+    }
+
+    public static OffsetDateTime utcOffsetDateTimeNow() {
+        return ZonedDateTime.now(ZoneId.of("UTC")).toOffsetDateTime();
     }
 
 }

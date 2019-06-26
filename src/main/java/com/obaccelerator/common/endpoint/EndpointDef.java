@@ -56,7 +56,7 @@ public enum EndpointDef {
                 }
             }
         }
-        throw new EndpointUndefinedException("Endpoint " + requestUri + " is undefined");
+        throw new EndpointUndefinedException("Endpoint " + method + " " + requestUri + " is undefined");
     }
 
     public boolean isOpen() {
