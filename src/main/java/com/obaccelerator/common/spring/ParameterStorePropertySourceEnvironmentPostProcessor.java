@@ -8,7 +8,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 
 /**
- * Adds the ParameterStorePropertySource to the Spring Environment
+ * Adds the ParameterStorePropertySource to the Spring Environment.
  */
 public class ParameterStorePropertySourceEnvironmentPostProcessor implements EnvironmentPostProcessor {
 
