@@ -34,4 +34,8 @@ public class DateUtil {
         return ZonedDateTime.now(ZoneId.of("UTC")).toOffsetDateTime();
     }
 
+    public static OffsetDateTime mysqlUtcDateTimeToOffsetDateTime(String mysqlDateTime) {
+        return LocalDateTime.parse(mysqlDateTime, DateUtil.MYSQL_DATETIME_FORMATTER).atOffset(ZoneOffset.UTC);
+    }
+
 }

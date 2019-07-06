@@ -19,6 +19,8 @@ import static com.obaccelerator.common.ObaConstant.ROLE_CLAIM;
 @Slf4j
 public class TokenGenerator {
 
+    private static final long TEMP_TOKEN_VALIDITY_MS = 24 * 60 * 60 * 1000;
+
     private static final String ALGORITHM = AlgorithmIdentifiers.RSA_USING_SHA512;
     private static final long INTERNAL_TOKEN_VALIDITY_MS = 10 * 1000;
     private static final long API_TOKEN_VALIDITY_MS = 10 * 60 * 1000;
@@ -67,7 +69,7 @@ public class TokenGenerator {
         final long millis = System.currentTimeMillis();
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("iat", millis);
-        jwtClaims.setClaim("exp", millis + validityMs); // valid for 10 minutes
+        jwtClaims.setClaim("exp", millis + TEMP_TOKEN_VALIDITY_MS); // valid for 10 minutes
         jwtClaims.setClaim("jti", UUID.randomUUID());
         for (String s : additionalClaims.keySet()) {
             jwtClaims.setClaim(s, additionalClaims.get(s));

@@ -7,6 +7,10 @@ import static com.obaccelerator.common.error.ObaError.ErrorMessages.*;
 @Getter
 public enum ObaError {
 
+    CLIENT_NON_MATCHING_CLIENT_ID_IN_URI_AND_TOKEN("CLT001", CLT001, CLT001,400),
+    CLIENT_KEYS_MAX_NUMBER_OF_KEYS_REACHED("CLT002", CLT002, CLT002, 409),
+    CLIENT_KEYS_KEY_ID_ALREADY_EXISTS("CLT003", CLT003, CLT003, 409),
+    CLIENT_KEYS_INVALID_KEY("CLT004", CLT004, CLT004, 400),
 
     USER_CREATION_FAILED("USR001", USR001, USR001, 500),
 
@@ -24,13 +28,13 @@ public enum ObaError {
     GATEWAY_API_TOKEN_EXPIRED("GTW003", GTW003, GTW003, 400),
     GATEWAY_API_TOKEN_INVALID("GTW004", GTW004, GTW004, 400),
 
-    OBA_TECHNICAL_ERROR("OBA001", GENERIC_TECHNICAL_ERROR, GENERIC_TECHNICAL_ERROR, 500),
-    OBA_DB_EXCEPTION("OBA002", GENERIC_TECHNICAL_ERROR, "Data access or SQL exception", 500),
-    OBA_INVALID_INTERNAL_TOKEN("OBA003", GENERIC_TECHNICAL_ERROR, "Invalid internal token", 500),
-    OBA_MISSING_INTERNAL_TOKEN_HEADER("OBA004", GENERIC_TECHNICAL_ERROR, "Missing internal token header", 500),
+    OBA_TECHNICAL_ERROR("OBA001", OBA001, OBA001, 500),
+    OBA_DB_EXCEPTION("OBA002", OBA001, "Data access or SQL exception", 500),
+    OBA_INVALID_INTERNAL_TOKEN("OBA003", OBA001, "Invalid internal token", 500),
+    OBA_MISSING_INTERNAL_TOKEN_HEADER("OBA004", OBA001, "Missing internal token header", 500),
     OBA_CLIENT_ERROR_INVALID_REQUEST("OBA005", "Invalid client request", "Invalid client request", 400),
     OBA_ENTITY_NOT_FOUND("OBA006", "Entity not found", "Entity not found", 404),
-    OBA_CLIENT_ERROR_INVALID_UUID_PROVIDED("OBA007", "UUID invalid", "UUID invalid", 400);
+    OBA_CLIENT_ERROR_INVALID_UUID_PROVIDED("OBA007", OBA007, OBA007, 400);
 
     private final String code;
     private String clientMessage;
@@ -41,7 +45,14 @@ public enum ObaError {
     public static class ErrorMessages {
 
         // Generic
-        public static final String GENERIC_TECHNICAL_ERROR = "Technical error";
+        public static final String OBA001 = "Technical error";
+        public static final String OBA007 = "One or more fields contain an invalid UUID format";
+
+        // Client
+        public static final String CLT001 = "Client id in token and uri do not match";
+        public static final String CLT002 = "You have reached the maximum number of allowed keys";
+        public static final String CLT003 = "Key id already exists";
+        public static final String CLT004 = "Public key value is not a valid public key";
 
         // User
         public static final String USR001 = "User creation failed";

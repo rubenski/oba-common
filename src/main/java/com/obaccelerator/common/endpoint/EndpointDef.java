@@ -14,9 +14,12 @@ public enum EndpointDef {
 
     GET_TOKEN(RequestMethod.GET.name(), Path.GET_TOKENS, EndpointAccessType.OPEN),
     GET_ELEVATED_TOKEN(RequestMethod.GET.name(), Path.GET_ELEVATED_TOKENS, EndpointAccessType.OPEN),
-    POST_CLIENT(RequestMethod.POST.name(), Path.POST_CLIENTS, EndpointAccessType.AUTHENTICATED_ELEVATED),
-    POST_USER(RequestMethod.POST.name(), Path.POST_USERS, EndpointAccessType.AUTHENTICATED_CLIENT),
-    GET_USER(RequestMethod.GET.name(), Path.GET_USERS, EndpointAccessType.AUTHENTICATED_CLIENT);
+    POST_CLIENT(RequestMethod.POST.name(), Path.POST_CLIENTS, EndpointAccessType.ELEVATED),
+    POST_USER(RequestMethod.POST.name(), Path.POST_USERS, EndpointAccessType.CLIENT_AUTHENTICATED),
+    GET_USER(RequestMethod.GET.name(), Path.GET_USERS, EndpointAccessType.CLIENT_AUTHENTICATED),
+    DELETE_CLIENTS(RequestMethod.DELETE.name(), Path.DELETE_CLIENTS, EndpointAccessType.CLIENT_ADMIN),
+    POST_CLIENT_KEY(RequestMethod.POST.name(), Path.POST_CLIENTS_KEYS, EndpointAccessType.ELEVATED),
+    GET_CLIENT_KEYS(RequestMethod.GET.name(), Path.GET_CLIENTS_KEYS, EndpointAccessType.CLIENT_AUTHENTICATED);
 
     private static final Map<String, Pattern> CACHE = new HashMap<>();
     private final String method;
@@ -33,6 +36,9 @@ public enum EndpointDef {
         public static final String GET_USERS = "/users/{userId}";
         public static final String POST_USERS = "/users";
         public static final String POST_CLIENTS = "/clients";
+        public static final String POST_CLIENTS_KEYS = "/clients/{clientId}/keys";
+        public static final String GET_CLIENTS_KEYS = "/clients/{clientId}/keys";
+        public static final String DELETE_CLIENTS = "/clients/{clientId}";
         public static final String GET_TOKENS = "/tokens";
         public static final String GET_ELEVATED_TOKENS = "/elevated-tokens";
     }
@@ -45,13 +51,13 @@ public enum EndpointDef {
                 String path = endpoint.getPath();
                 String urlPattern = path.replaceAll("\\{[0-9a-zA-Z-]+}", "[0-9A-Za-z-]+?");
                 Pattern regexPattern = CACHE.get(urlPattern);
-                if(regexPattern == null) {
+                if (regexPattern == null) {
                     regexPattern = Pattern.compile(urlPattern);
                 }
                 CACHE.put(urlPattern, regexPattern);
                 Matcher matcher = regexPattern.matcher(requestUri);
                 boolean matches = matcher.matches();
-                if(matches) {
+                if (matches) {
                     return endpoint;
                 }
             }
@@ -64,11 +70,11 @@ public enum EndpointDef {
     }
 
     public boolean isAuthenticatedElevated() {
-        return accessType.equals(EndpointAccessType.AUTHENTICATED_ELEVATED);
+        return accessType.equals(EndpointAccessType.ELEVATED);
     }
 
     public boolean isAuthenticatedClient() {
-        return accessType.equals(EndpointAccessType.AUTHENTICATED_CLIENT);
+        return accessType.equals(EndpointAccessType.CLIENT_AUTHENTICATED);
     }
 
 }

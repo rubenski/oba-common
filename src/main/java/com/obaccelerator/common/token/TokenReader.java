@@ -12,12 +12,7 @@ import org.jose4j.jwx.JsonWebStructure;
 import org.jose4j.lang.JoseException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -69,7 +64,7 @@ public class TokenReader {
 
 
     public static Optional<String> readClaim(String token, String claim, String publicKey) throws ApiTokenProcessingException {
-        return Optional.ofNullable((String) readClaims(token, stringToPublicKey(publicKey)).get(claim));
+        return Optional.ofNullable((String) readClaims(token, KeyUtil.stringToRsaPublicKey(publicKey)).get(claim));
     }
 
     public static Optional<String> readHeader(String token, String header, PublicKey publicKey) throws ApiTokenProcessingException {
@@ -120,7 +115,7 @@ public class TokenReader {
     }
 
     public static void verifySignature(final String token, final String publicKey) throws ApiTokenSignatureValidationException, ApiTokenProcessingException {
-        verifySignature(token, stringToPublicKey(publicKey));
+        verifySignature(token, KeyUtil.stringToRsaPublicKey(publicKey));
     }
 
     private static Optional<String> findStringHeader(String token, String header, JwtConsumer jwtConsumer) throws ApiTokenProcessingException {
@@ -136,19 +131,6 @@ public class TokenReader {
             return Optional.ofNullable(headerObject);
         }
         return Optional.empty();
-    }
-
-    private static PublicKey stringToPublicKey(String keyString) {
-        String cleaned = keyString.replaceAll("\\n", "")
-                .replace("-----BEGIN PUBLIC KEY-----", "")
-                .replace("-----END PUBLIC KEY-----", "");
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(cleaned.getBytes()));
-        try {
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            return keyFactory.generatePublic(keySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private static void processingException(Exception e) throws ApiTokenProcessingException {
