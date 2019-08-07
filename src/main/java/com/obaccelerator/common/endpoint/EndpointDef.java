@@ -13,13 +13,12 @@ import java.util.regex.Pattern;
 public enum EndpointDef {
 
     GET_TOKEN(RequestMethod.GET.name(), Path.GET_TOKENS, EndpointAccessType.OPEN),
-    GET_ELEVATED_TOKEN(RequestMethod.GET.name(), Path.GET_ELEVATED_TOKENS, EndpointAccessType.OPEN),
-    POST_CLIENT(RequestMethod.POST.name(), Path.POST_CLIENTS, EndpointAccessType.ELEVATED),
-    POST_USER(RequestMethod.POST.name(), Path.POST_USERS, EndpointAccessType.CLIENT_AUTHENTICATED),
-    GET_USER(RequestMethod.GET.name(), Path.GET_USERS, EndpointAccessType.CLIENT_AUTHENTICATED),
-    DELETE_CLIENTS(RequestMethod.DELETE.name(), Path.DELETE_CLIENTS, EndpointAccessType.CLIENT_ADMIN),
-    POST_CLIENT_KEY(RequestMethod.POST.name(), Path.POST_CLIENTS_KEYS, EndpointAccessType.ELEVATED),
-    GET_CLIENT_KEYS(RequestMethod.GET.name(), Path.GET_CLIENTS_KEYS, EndpointAccessType.CLIENT_AUTHENTICATED);
+    POST_CLIENT(RequestMethod.POST.name(), Path.POST_CLIENTS, EndpointAccessType.PORTAL_CLIENT),
+    POST_USER(RequestMethod.POST.name(), Path.POST_USERS, EndpointAccessType.API_CLIENT),
+    GET_USER(RequestMethod.GET.name(), Path.GET_USERS, EndpointAccessType.API_CLIENT),
+    DELETE_CLIENTS(RequestMethod.DELETE.name(), Path.DELETE_CLIENTS, EndpointAccessType.PORTAL_CLIENT),
+    POST_CLIENT_KEY(RequestMethod.POST.name(), Path.POST_CLIENTS_KEYS, EndpointAccessType.PORTAL_CLIENT),
+    GET_CLIENT_KEYS(RequestMethod.GET.name(), Path.GET_CLIENTS_KEYS, EndpointAccessType.API_CLIENT);
 
     private static final Map<String, Pattern> CACHE = new HashMap<>();
     private final String method;
@@ -40,7 +39,6 @@ public enum EndpointDef {
         public static final String GET_CLIENTS_KEYS = "/clients/{clientId}/keys";
         public static final String DELETE_CLIENTS = "/clients/{clientId}";
         public static final String GET_TOKENS = "/tokens";
-        public static final String GET_ELEVATED_TOKENS = "/elevated-tokens";
     }
 
     public static EndpointDef getEndpoint(HttpServletRequest request) throws EndpointUndefinedException {
@@ -65,16 +63,16 @@ public enum EndpointDef {
         throw new EndpointUndefinedException("Endpoint " + method + " " + requestUri + " is undefined");
     }
 
-    public boolean isOpen() {
+    public boolean isOpenEndpoint() {
         return accessType.equals(EndpointAccessType.OPEN);
     }
 
-    public boolean isAuthenticatedElevated() {
-        return accessType.equals(EndpointAccessType.ELEVATED);
+    public boolean isPortalClientEndpoint() {
+        return accessType.equals(EndpointAccessType.PORTAL_CLIENT);
     }
 
-    public boolean isAuthenticatedClient() {
-        return accessType.equals(EndpointAccessType.CLIENT_AUTHENTICATED);
+    public boolean isApiClientEndpoint() {
+        return accessType.equals(EndpointAccessType.API_CLIENT);
     }
 
 }

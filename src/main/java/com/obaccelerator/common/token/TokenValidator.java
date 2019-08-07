@@ -19,8 +19,6 @@ public class TokenValidator {
     private static final String TOKEN_INVALID_SIGNATURE = "API token has an invalid signature";
     private static final String TOKEN_EXPIRED_MESSAGE = "API token expired";
     private static final String TOKEN_PROCESSING_EXCEPTION_MESSAGE = "Could not process token";
-    private static final String TOKEN_INVALID_ELEVATED_ROLE_NAME = "Invalid role name";
-
 
     public static void validateClientToken(final String token, final PublicKey publicKey) throws ApiTokenValidationException {
 
@@ -50,38 +48,6 @@ public class TokenValidator {
             UUID.fromString((String) clientId);
         } catch (RuntimeException e) {
             throw new ApiTokenValidationException(TOKEN_INVALID_MESSAGE_UUID);
-        }
-
-        // Is the token expired?
-        long expTime = (long) exp;
-        if (expTime < System.currentTimeMillis()) {
-            throw new ApiTokenValidationException(TOKEN_EXPIRED_MESSAGE);
-        }
-    }
-
-    public static void validateElevatedToken(final String token, final String elevatedRoleName, final PublicKey publicKey) throws ApiTokenValidationException {
-
-        verifySignature(token, publicKey);
-
-        Map<String, Object> claims = null;
-        try {
-            claims = TokenReader.readClaims(token, publicKey);
-        } catch (ApiTokenProcessingException e) {
-            throw new ApiTokenValidationException(TOKEN_PROCESSING_EXCEPTION_MESSAGE);
-        }
-
-        // Are all expected fields present?
-        Object iat = claims.get("iat");
-        Object role = claims.get("role");
-        Object jti = claims.get("jti");
-        Object exp = claims.get("exp");
-
-        if (claims.size() != 4 || iat == null || role == null || jti == null || exp == null) {
-            throw new ApiTokenValidationException(TOKEN_INVALID_MESSAGE_CLAIMS);
-        }
-
-        if(!elevatedRoleName.equals(role)){
-            throw new ApiTokenValidationException(TOKEN_INVALID_ELEVATED_ROLE_NAME);
         }
 
         // Is the token expired?

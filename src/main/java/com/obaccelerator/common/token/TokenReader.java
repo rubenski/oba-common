@@ -88,10 +88,10 @@ public class TokenReader {
         return Optional.empty();
     }
 
-    public static Map<String, String> readClaimsWithoutSignatureVerification(final String token) throws ApiTokenProcessingException {
+    public static Map<String, Object> readClaimsWithoutSignatureVerification(final String token) throws ApiTokenProcessingException {
         try {
             return UNSAFE_JWT_CONSUMER.processToClaims(token).getClaimsMap().entrySet().stream()
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> (String) e.getValue()));
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
         } catch (InvalidJwtException e) {
             processingException(e);
         }

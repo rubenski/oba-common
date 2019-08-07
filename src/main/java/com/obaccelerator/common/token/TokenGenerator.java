@@ -49,10 +49,10 @@ public class TokenGenerator {
                 Collections.emptyMap());
     }
 
-    public String generateApiElevatedToken(String externalElevatedRoleName) {
+    public String generateToken(String roleName) {
         return generateToken(API_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
-                    put(ROLE_CLAIM, externalElevatedRoleName);
+                    put(ROLE_CLAIM, roleName);
                 }},
                 Collections.emptyMap());
     }
