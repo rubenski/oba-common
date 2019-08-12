@@ -18,7 +18,8 @@ public enum EndpointDef {
     GET_USER(RequestMethod.GET.name(), Path.GET_USERS, EndpointAccessType.API_CLIENT),
     DELETE_CLIENTS(RequestMethod.DELETE.name(), Path.DELETE_CLIENTS, EndpointAccessType.PORTAL_CLIENT),
     POST_CLIENT_KEY(RequestMethod.POST.name(), Path.POST_CLIENTS_KEYS, EndpointAccessType.PORTAL_CLIENT),
-    GET_CLIENT_KEYS(RequestMethod.GET.name(), Path.GET_CLIENTS_KEYS, EndpointAccessType.API_CLIENT);
+    GET_CLIENT_KEYS(RequestMethod.GET.name(), Path.GET_CLIENTS_KEYS, EndpointAccessType.API_CLIENT),
+    POST_CUSTOMERS(RequestMethod.POST.name(), Path.POST_CUSTOMERS, EndpointAccessType.PORTAL_CLIENT);
 
     private static final Map<String, Pattern> CACHE = new HashMap<>();
     private final String method;
@@ -39,6 +40,7 @@ public enum EndpointDef {
         public static final String GET_CLIENTS_KEYS = "/clients/{clientId}/keys";
         public static final String DELETE_CLIENTS = "/clients/{clientId}";
         public static final String GET_TOKENS = "/tokens";
+        public static final String POST_CUSTOMERS = "/customers";
     }
 
     public static EndpointDef getEndpoint(HttpServletRequest request) throws EndpointUndefinedException {
