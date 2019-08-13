@@ -1,8 +1,6 @@
 package com.obaccelerator.common.spring;
 
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
-import com.amazonaws.services.simplesystemsmanagement.model.DescribeParametersRequest;
-import com.amazonaws.services.simplesystemsmanagement.model.DescribeParametersResult;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest;
 import com.amazonaws.services.simplesystemsmanagement.model.ParameterNotFoundException;
 import lombok.extern.slf4j.Slf4j;

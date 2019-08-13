@@ -44,9 +44,6 @@ public abstract class SetAwsParameterStorePropertiesAsPropertySource implements 
         AWSSimpleSystemsManagementClientBuilder clientBuilder = AWSSimpleSystemsManagementClientBuilder.standard();
         clientBuilder.setRegion("eu-central-1");
         AWSSimpleSystemsManagement awsParameterStoreClient = clientBuilder.build();
-        ParameterStorePropertySource parameterStorePropertySource =
-                new ParameterStorePropertySource("AWSParameterStorePropertySource", awsParameterStoreClient);
-
         DescribeParametersRequest parametersRequest = new DescribeParametersRequest();
         DescribeParametersResult describeParametersResult = awsParameterStoreClient.describeParameters(parametersRequest);
 
