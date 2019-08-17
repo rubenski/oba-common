@@ -22,15 +22,14 @@ public class ParameterStorePropertySource extends PropertySource<AWSSimpleSystem
         try {
             // ext_ prefix prevents a call to AWS for each and every property that was not resolved by previous property sources
             if (propertyName.startsWith("ext_")) {
-                String value = source.getParameter(new GetParameterRequest().withName(propertyName)
+                log.info("Fetching parameter {} from AWS Parameter Store", propertyName);
+                return source.getParameter(new GetParameterRequest().withName(propertyName)
                         .withWithDecryption(true))
                         .getParameter()
                         .getValue();
-                log.info("Found a property in AWS Parameter Store: " + propertyName);
-                return value;
             }
         } catch (ParameterNotFoundException e) {
-            return null;
+            throw new RuntimeException("Could not find AWS parameter " + propertyName, e);
         }
         return null;
     }

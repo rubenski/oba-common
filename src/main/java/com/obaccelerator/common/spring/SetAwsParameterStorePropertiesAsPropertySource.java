@@ -10,7 +10,6 @@ import org.springframework.core.env.PropertiesPropertySource;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -24,44 +23,46 @@ import java.util.Properties;
 @Slf4j
 public abstract class SetAwsParameterStorePropertiesAsPropertySource implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
 
-    public SetAwsParameterStorePropertiesAsPropertySource() {
+    private static AWSSimpleSystemsManagement AWS_CLIENT;
+
+    static {
+        AWSSimpleSystemsManagementClientBuilder clientBuilder = AWSSimpleSystemsManagementClientBuilder.standard();
+        clientBuilder.setRegion("eu-central-1");
+        AWS_CLIENT = clientBuilder.build();
     }
 
     public abstract Map<String, List<String>> getAwsParametersToNeededProperties();
 
-
-    public Optional<List<String>> setAwsParameterAs(String awsParameterName) {
-        for (String awsPropertyName : getAwsParametersToNeededProperties().keySet()) {
-            if(awsParameterName.equals(awsPropertyName)) {
-                return Optional.of(getAwsParametersToNeededProperties().get(awsParameterName));
-            }
-        }
-        return Optional.empty();
-    }
-
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
 
-        AWSSimpleSystemsManagementClientBuilder clientBuilder = AWSSimpleSystemsManagementClientBuilder.standard();
-        clientBuilder.setRegion("eu-central-1");
-        AWSSimpleSystemsManagement awsParameterStoreClient = clientBuilder.build();
-        DescribeParametersRequest parametersRequest = new DescribeParametersRequest();
-        DescribeParametersResult describeParametersResult = awsParameterStoreClient.describeParameters(parametersRequest);
+        DescribeParametersResult describeParametersResult = AWS_CLIENT.describeParameters(new DescribeParametersRequest());
 
+        Map<String, List<String>> awsParametersToNeededProperties = getAwsParametersToNeededProperties();
         Properties secureProps = new Properties();
-        for (ParameterMetadata parameter : describeParametersResult.getParameters()){
-            Optional<List<String>> stringListOptional = setAwsParameterAs(parameter.getName());
-            if(stringListOptional.isPresent()) {
-                log.info("Fetching parameter named {} from AWS for insertion into environment", parameter.getName());
-                GetParameterRequest getParameterRequest = new GetParameterRequest();
-                getParameterRequest.setName(parameter.getName());
-                getParameterRequest.setWithDecryption(true);
-                GetParameterResult decryptedParameter = awsParameterStoreClient.getParameter(getParameterRequest);
-                for (String newProperty : stringListOptional.get()) {
-                    secureProps.setProperty(newProperty, decryptedParameter.getParameter().getValue());
+        if(awsParametersToNeededProperties != null) {
+            for (Map.Entry<String, List<String>> propertyEntry : awsParametersToNeededProperties.entrySet()) {
+                String awsProperty = propertyEntry.getKey();
+                List<String> setAsProperties = propertyEntry.getValue();
+                String value = fetchAwsPropertyValue(awsProperty);
+                for (String setAsProperty : setAsProperties) {
+                    secureProps.setProperty(setAsProperty, value);
                 }
             }
         }
-
         event.getEnvironment().getPropertySources().addFirst(new PropertiesPropertySource("myProps", secureProps));
+    }
+
+    public String fetchAwsPropertyValue(String awsProperty) {
+        GetParameterRequest getParameterRequest = new GetParameterRequest();
+        getParameterRequest.setName(awsProperty);
+        getParameterRequest.setWithDecryption(true);
+        try {
+            GetParameterResult parameterResult = AWS_CLIENT.getParameter(getParameterRequest);
+            return parameterResult.getParameter().getValue();
+        } catch(ParameterNotFoundException e) {
+            throw new RuntimeException("Could not find parameter " + awsProperty + " in AWS", e);
+        }
+
+
     }
 }
