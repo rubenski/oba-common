@@ -6,6 +6,7 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 
+
 public class PfxUtil {
 
     private KeyStore keyStore;
@@ -25,11 +26,24 @@ public class PfxUtil {
     }
 
     public PublicKey getPublicKey(String alias) {
-        return getCertificate(alias).getPublicKey();
+        Certificate certificate = getCertificate(alias);
+        if(certificate == null) {
+            throw new RuntimeException("Could not find certificate for alias " + alias);
+        }
+        return certificate.getPublicKey();
     }
 
-    private  KeyStore loadKeyStore(String pfxPath, String pfxPassword) {
-        InputStream keyFile = PfxUtil.class.getResourceAsStream(pfxPath);
+
+    public Key getPrivateKey(String alias) {
+        try {
+            return keyStore.getKey(alias, pfxPassword.toCharArray());
+        } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException e) {
+            throw new RuntimeException("Could not load private key", e);
+        }
+    }
+
+    public static KeyStore loadKeyStore(String pfxPath, String pfxPassword) {
+        InputStream keyFile = PfxUtil.class.getClassLoader().getResourceAsStream(pfxPath);
         if (keyFile == null) {
             throw new RuntimeException("Could not find " + pfxPath);
         }
@@ -44,11 +58,4 @@ public class PfxUtil {
         }
     }
 
-    public Key getPrivateKey(String alias) {
-        try {
-            return keyStore.getKey(alias, pfxPassword.toCharArray());
-        } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException e) {
-            throw new RuntimeException("Could not load private key", e);
-        }
-    }
 }

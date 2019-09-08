@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client {
+public class Application {
     private UUID id;
     private String name;
     private String email;

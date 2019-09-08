@@ -13,13 +13,14 @@ import java.util.regex.Pattern;
 public enum EndpointDef {
 
     GET_TOKEN(RequestMethod.GET.name(), Path.GET_TOKENS, EndpointAccessType.OPEN),
-    POST_CLIENT(RequestMethod.POST.name(), Path.POST_CLIENTS, EndpointAccessType.PORTAL_CLIENT),
+    POST_APPLICATION(RequestMethod.POST.name(), Path.POST_APPLICATION, EndpointAccessType.PORTAL_CLIENT),
     POST_USER(RequestMethod.POST.name(), Path.POST_USERS, EndpointAccessType.API_CLIENT),
     GET_USER(RequestMethod.GET.name(), Path.GET_USERS, EndpointAccessType.API_CLIENT),
     DELETE_CLIENTS(RequestMethod.DELETE.name(), Path.DELETE_CLIENTS, EndpointAccessType.PORTAL_CLIENT),
     POST_CLIENT_KEY(RequestMethod.POST.name(), Path.POST_CLIENTS_KEYS, EndpointAccessType.PORTAL_CLIENT),
     GET_CLIENT_KEYS(RequestMethod.GET.name(), Path.GET_CLIENTS_KEYS, EndpointAccessType.API_CLIENT),
-    POST_CUSTOMERS(RequestMethod.POST.name(), Path.POST_CUSTOMERS, EndpointAccessType.PORTAL_CLIENT);
+    POST_ORGANIZATIONS(RequestMethod.POST.name(), Path.POST_ORGANIZATIONS, EndpointAccessType.PORTAL_CLIENT),
+    POST_SESSIONS(RequestMethod.POST.name(), Path.POST_SESSIONS, EndpointAccessType.PORTAL_CLIENT);
 
     private static final Map<String, Pattern> CACHE = new HashMap<>();
     private final String method;
@@ -35,12 +36,13 @@ public enum EndpointDef {
     public static class Path {
         public static final String GET_USERS = "/users/{userId}";
         public static final String POST_USERS = "/users";
-        public static final String POST_CLIENTS = "/clients";
-        public static final String POST_CLIENTS_KEYS = "/clients/{clientId}/keys";
-        public static final String GET_CLIENTS_KEYS = "/clients/{clientId}/keys";
-        public static final String DELETE_CLIENTS = "/clients/{clientId}";
+        public static final String POST_APPLICATION = "/applications";
+        public static final String POST_CLIENTS_KEYS = "/applications/{applicationId}/keys";
+        public static final String GET_CLIENTS_KEYS = "/applications/{applicationId}/keys";
+        public static final String DELETE_CLIENTS = "/applications/{applicationId}";
         public static final String GET_TOKENS = "/tokens";
-        public static final String POST_CUSTOMERS = "/customers";
+        public static final String POST_ORGANIZATIONS = "/organizations";
+        public static final String POST_SESSIONS = "/sessions";
     }
 
     public static EndpointDef getEndpoint(HttpServletRequest request) throws EndpointUndefinedException {

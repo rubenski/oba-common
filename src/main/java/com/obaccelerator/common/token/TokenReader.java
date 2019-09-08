@@ -27,6 +27,7 @@ public class TokenReader {
 
     private static final JwtConsumer UNSAFE_JWT_CONSUMER = new JwtConsumerBuilder()
             .setSkipSignatureVerification()
+            .setSkipDefaultAudienceValidation()
             .build();
 
 
@@ -44,6 +45,22 @@ public class TokenReader {
 
     public static Map<String, Object> readClaims(String token, PublicKey publicKey) throws ApiTokenProcessingException {
         JwtConsumer consumer = new JwtConsumerBuilder().setVerificationKey(publicKey)
+                .build();
+
+        JwtClaims jwtClaims = null;
+        try {
+            jwtClaims = consumer.processToClaims(token);
+        } catch (InvalidJwtException e) {
+            processingException(e);
+        }
+
+        Map<String, Object> claims = new HashMap<>();
+        jwtClaims.getClaimsMap().forEach(claims::put);
+        return claims;
+    }
+
+    public static Map<String, Object> readClaims(String token, String audience, PublicKey publicKey) throws ApiTokenProcessingException {
+        JwtConsumer consumer = new JwtConsumerBuilder().setVerificationKey(publicKey).setExpectedAudience(audience)
                 .build();
 
         JwtClaims jwtClaims = null;
@@ -134,7 +151,7 @@ public class TokenReader {
     }
 
     private static void processingException(Exception e) throws ApiTokenProcessingException {
-        throw new ApiTokenProcessingException(TOKEN_EXCEPTION, e);
+        throw new ApiTokenProcessingException(TOKEN_EXCEPTION + " : " + e.getMessage(), e);
     }
 
 

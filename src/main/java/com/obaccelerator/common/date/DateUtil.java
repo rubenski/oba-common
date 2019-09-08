@@ -35,6 +35,9 @@ public class DateUtil {
     }
 
     public static OffsetDateTime mysqlUtcDateTimeToOffsetDateTime(String mysqlDateTime) {
+        if(mysqlDateTime == null) {
+            return null;
+        }
         return LocalDateTime.parse(mysqlDateTime, DateUtil.MYSQL_DATETIME_FORMATTER).atOffset(ZoneOffset.UTC);
     }
 

@@ -1,7 +1,9 @@
 package com.obaccelerator.common.http;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 
+@Slf4j
 public class ExpectedHttpCodesValidator implements ResponseValidator {
 
     private int[] validCodes;

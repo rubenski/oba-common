@@ -53,7 +53,8 @@ public enum ObaError {
      * OBA portal errrors
      */
     PORTAL_COULD_NOT_SEND_REGISTRATION_EMAIL("PRT001", TECHNICAL_ERROR, "Could not send registration email", 500),
-    PORTAL_INVALID_COGNITO_TOKEN("PRT002", TECHNICAL_ERROR, "Invalid Cognito token received", 500);
+    PORTAL_INVALID_COGNITO_TOKEN("PRT002", TECHNICAL_ERROR, "Invalid Cognito token received", 500),
+    PORTAL_REGISTRATION_ALREADY_EXISTS("PRT003", PRT003, PRT003, 400);
 
 
     private final String code;
@@ -93,6 +94,9 @@ public enum ObaError {
         public static final String GTW002 = "Unable to process API token";
         public static final String GTW003 = "API token expired";
         public static final String GTW004 = "API token expired";
+
+        // Portal
+        public static final String PRT003 = "Registration already exists";
 
     }
 
