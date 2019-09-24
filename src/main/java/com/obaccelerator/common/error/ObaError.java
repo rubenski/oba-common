@@ -11,11 +11,13 @@ public enum ObaError {
      * OBA errors
      */
 
-    // Client
-    CLIENT_NON_MATCHING_CLIENT_ID_IN_URI_AND_TOKEN("CLT001", CLT001, CLT001, 400),
-    CLIENT_KEYS_MAX_NUMBER_OF_KEYS_REACHED("CLT002", CLT002, CLT002, 409),
-    CLIENT_KEYS_KEY_ID_ALREADY_EXISTS("CLT003", CLT003, CLT003, 409),
-    CLIENT_KEYS_INVALID_KEY("CLT004", CLT004, CLT004, 400),
+    // Application
+    APPLICATION_NON_MATCHING_CLIENT_ID_IN_URI_AND_TOKEN("APP001", APP001, APP001, 400),
+    APPLICATION_KEYS_MAX_NUMBER_OF_KEYS_REACHED("APP002", APP002, APP002, 409),
+    APPLICATION_KEYS_KEY_ID_ALREADY_EXISTS("APP003", APP003, APP003, 409),
+    APPLICATION_KEYS_INVALID_KEY("APP004", APP004, APP004, 400),
+    APPLICATION_NOT_ONBOARDED_WITH_BANK("APP005", APP005, APP005, 400),
+    APPLICATION_ONBOARDING_DISABLED("APP006", APP006, APP006, 403),
 
     // User
     USER_CREATION_FAILED("USR001", USR001, USR001, 500),
@@ -38,7 +40,6 @@ public enum ObaError {
     OBA_CLIENT_ERROR_INVALID_REQUEST("OBA005", "Invalid client request", "Invalid client request", 400),
     OBA_ENTITY_NOT_FOUND("OBA006", "Entity not found", "Entity not found", 404),
     OBA_CLIENT_ERROR_INVALID_UUID_PROVIDED("OBA007", OBA007, OBA007, 400),
-
 
     /**
      * OBA Gateway errors
@@ -70,10 +71,12 @@ public enum ObaError {
         public static final String OBA007 = "One or more fields contain an invalid UUID format";
 
         // Client
-        public static final String CLT001 = "Client id in token and uri do not match";
-        public static final String CLT002 = "You have reached the maximum number of allowed keys";
-        public static final String CLT003 = "Key id already exists";
-        public static final String CLT004 = "Public key value is not a valid public key";
+        public static final String APP001 = "Application id in token and uri do not match";
+        public static final String APP002 = "You have reached the maximum number of allowed keys";
+        public static final String APP003 = "Key id already exists";
+        public static final String APP004 = "Public key value is not a valid public key";
+        public static final String APP005 = "Application is not onboarded with bank";
+        public static final String APP006 = "Bank is disabled";
 
         // User
         public static final String USR001 = "User creation failed";

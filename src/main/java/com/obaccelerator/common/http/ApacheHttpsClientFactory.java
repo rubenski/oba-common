@@ -17,6 +17,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.ManagedHttpClientConnectionFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
 
 import javax.net.ssl.SSLContext;
@@ -45,38 +46,21 @@ public class ApacheHttpsClientFactory {
         private String trustStoreClassPath;
         private String trustStorePw;
         private boolean trustSelfSigned;
+        private KeyStore keyStore;
+
+        boolean isMtls() {
+            return keyStoreClassPath != null || keyStore != null;
+        }
     }
 
     public static CloseableHttpClient getHttpsClient(HttpsClientFactoryInput input) {
 
         HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory = new ManagedHttpClientConnectionFactory();
-        SSLContext sslcontext = null;
-        KeyStore keyStore = loadKeyStore(input);
+        SSLContext sslContext = createSslContext(input);
 
-        try {
-
-            if (!input.isTrustSelfSigned()) {
-                KeyStore trustStore = KeyStore.getInstance(KEYSTORE_TYPE_PKCS12);
-                trustStore.load(ApacheHttpsClientFactory.class.getResourceAsStream(input.getTrustStoreClassPath()), input.getTrustStorePw().toCharArray());
-                sslcontext = SSLContexts.custom()
-                        .loadKeyMaterial(keyStore, input.getKeyStorePw().toCharArray())
-                        .loadTrustMaterial(trustStore, null)
-                        .build();
-            } else {
-                sslcontext = SSLContexts.custom()
-                        .loadKeyMaterial(keyStore, input.getKeyStorePw().toCharArray())
-                        .loadTrustMaterial(new TrustSelfSignedStrategy())
-                        .build();
-            }
-
-        } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException | KeyManagementException | CertificateException | IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Create a registry of custom connection socket factories for supported
-        // protocol schemes.
+        // Create a registry of custom connection socket factories for supported protocol schemes.
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("https", new SSLConnectionSocketFactory(sslcontext))
+                .register("https", new SSLConnectionSocketFactory(sslContext))
                 .build();
 
         // Create a connection manager with custom configuration.
@@ -101,6 +85,7 @@ public class ApacheHttpsClientFactory {
                 .setUnmappableInputAction(CodingErrorAction.IGNORE)
                 .setCharset(Consts.UTF_8)
                 .build();
+
         // Configure the connection manager to use connection configuration either
         // by default or for a specific host.
         connectionManager.setDefaultConnectionConfig(connectionConfig);
@@ -115,20 +100,48 @@ public class ApacheHttpsClientFactory {
                 .build();
     }
 
-    private static KeyStore loadKeyStore(HttpsClientFactoryInput input) {
-        try (InputStream stream = ApacheHttpsClientFactory.class.getResourceAsStream(input.getKeyStoreClassPath())) {
-            if (stream == null) {
-                throw new IllegalArgumentException("Keystore not found at " + input.keyStoreClassPath);
+    private static SSLContext createSslContext(HttpsClientFactoryInput input) {
+        SSLContext sslContext = null;
+        SSLContextBuilder sslContextBuilder = SSLContexts.custom();
+
+        try {
+            if (input.isMtls()) {
+                // Load the keystore with client cert and private key. This will be an eIDAS client cert and key in PSD2 scenarios.
+                sslContextBuilder.loadKeyMaterial(getKeyStore(input), input.getKeyStorePw().toCharArray());
             }
-            KeyStore keyStore = KeyStore.getInstance("PKCS12");
-            keyStore.load(stream, input.getKeyStorePw().toCharArray());
-            return keyStore;
-        } catch (IOException | CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
-            throw new IllegalArgumentException("Could not find or read keystore", e);
+
+            // Load the trusted servers
+            if (!input.isTrustSelfSigned()) {
+                KeyStore trustStore = KeyStore.getInstance(KEYSTORE_TYPE_PKCS12);
+                trustStore.load(ApacheHttpsClientFactory.class.getResourceAsStream(input.getTrustStoreClassPath()), input.getTrustStorePw().toCharArray());
+                sslContextBuilder.loadTrustMaterial(new TrustSelfSignedStrategy());
+                sslContext = sslContextBuilder.build();
+            } else {
+                sslContext = sslContextBuilder
+                        .loadTrustMaterial(new TrustSelfSignedStrategy())
+                        .build();
+            }
+        } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException | KeyManagementException | CertificateException | IOException e) {
+            throw new RuntimeException(e);
         }
+        return sslContext;
     }
 
-
-
+    private static KeyStore getKeyStore(HttpsClientFactoryInput input) {
+        if (input.getKeyStore() != null) {
+            return input.getKeyStore();
+        } else {
+            try (InputStream stream = ApacheHttpsClientFactory.class.getResourceAsStream(input.getKeyStoreClassPath())) {
+                if (stream == null) {
+                    throw new IllegalArgumentException("Keystore not found at " + input.keyStoreClassPath);
+                }
+                KeyStore keyStore = KeyStore.getInstance("PKCS12");
+                keyStore.load(stream, input.getKeyStorePw().toCharArray());
+                return keyStore;
+            } catch (IOException | CertificateException | NoSuchAlgorithmException | KeyStoreException e) {
+                throw new IllegalArgumentException("Could not find or read keystore", e);
+            }
+        }
+    }
 }
 

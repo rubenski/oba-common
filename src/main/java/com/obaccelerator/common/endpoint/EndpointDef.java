@@ -20,6 +20,7 @@ public enum EndpointDef {
     POST_CLIENT_KEY(RequestMethod.POST.name(), Path.POST_CLIENTS_KEYS, EndpointAccessType.PORTAL_CLIENT),
     GET_CLIENT_KEYS(RequestMethod.GET.name(), Path.GET_CLIENTS_KEYS, EndpointAccessType.API_CLIENT),
     POST_ORGANIZATIONS(RequestMethod.POST.name(), Path.POST_ORGANIZATIONS, EndpointAccessType.PORTAL_CLIENT),
+    GET_ORGANIZATIONS(RequestMethod.GET.name(), Path.GET_ORGANIZATIONS, EndpointAccessType.PORTAL_CLIENT),
     POST_SESSIONS(RequestMethod.POST.name(), Path.POST_SESSIONS, EndpointAccessType.PORTAL_CLIENT);
 
     private static final Map<String, Pattern> CACHE = new HashMap<>();
@@ -42,6 +43,7 @@ public enum EndpointDef {
         public static final String DELETE_CLIENTS = "/applications/{applicationId}";
         public static final String GET_TOKENS = "/tokens";
         public static final String POST_ORGANIZATIONS = "/organizations";
+        public static final String GET_ORGANIZATIONS = "/organizations";
         public static final String POST_SESSIONS = "/sessions";
     }
 
