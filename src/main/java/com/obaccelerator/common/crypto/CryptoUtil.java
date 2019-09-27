@@ -1,7 +1,11 @@
 package com.obaccelerator.common.crypto;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayInputStream;
@@ -16,7 +20,12 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Arrays;
 import java.util.Base64;
 
+@Slf4j
 public class CryptoUtil {
+
+    public static final int AES_KEY_SIZE = 256;
+    public static final int GCM_IV_LENGTH = 12;
+    public static final int GCM_TAG_LENGTH = 16;
 
     // Output contains the IV in the first block
     public static byte[] encryptCbc(SecretKey secretKey, String plainText) {
@@ -56,6 +65,56 @@ public class CryptoUtil {
         } catch (GeneralSecurityException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public SecretKey generateSymmetricAesKey() {
+        KeyGenerator keyGenerator = null;
+        try {
+            keyGenerator = KeyGenerator.getInstance("AES");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        keyGenerator.init(AES_KEY_SIZE);
+        return keyGenerator.generateKey();
+    }
+
+    public byte[] generateIV() {
+        byte[] iv = new byte[GCM_IV_LENGTH];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(iv);
+        return iv;
+    }
+
+    public static byte[] encrypt(byte[] plaintext, SecretKey key, byte[] iv) throws Exception {
+        // Get Cipher Instance
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        // Create SecretKeySpec
+        SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
+        // Create GCMParameterSpec
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
+        // Initialize Cipher for ENCRYPT_MODE
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec, gcmParameterSpec);
+        // Perform Encryption
+        return cipher.doFinal(plaintext);
+    }
+
+    public static String decrypt(byte[] cipherText, SecretKey key, byte[] IV) throws Exception {
+        // Get Cipher Instance
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+
+        // Create SecretKeySpec
+        SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
+
+        // Create GCMParameterSpec
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, IV);
+
+        // Initialize Cipher for DECRYPT_MODE
+        cipher.init(Cipher.DECRYPT_MODE, keySpec, gcmParameterSpec);
+
+        // Perform Decryption
+        byte[] decryptedText = cipher.doFinal(cipherText);
+
+        return new String(decryptedText);
     }
 
     // TODO: refactor : code below always uses an RSA key factory. Fine for now, but if we get non-RSA keys this should be fixed
