@@ -2,8 +2,6 @@ package com.obaccelerator.common.id;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * Produces a
  */
