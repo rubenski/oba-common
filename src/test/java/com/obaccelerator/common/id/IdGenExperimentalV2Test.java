@@ -1,26 +1,22 @@
-package com.obaccelerator.common.endpoint;
+package com.obaccelerator.common.id;
 
-import com.obaccelerator.common.id.IdGenExperimental;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.*;
 
 @Slf4j
-public class UUIDGenTest {
+public class IdGenExperimentalV2Test {
 
     List<Long> resultList = new ArrayList<>();
     Set<Long> resultSet = new ConcurrentSkipListSet<>();
 
     private static final int IDS_PER_TASK = 10;
     private static final int NUMBER_OF_TASKS = 10;
-
-    @Test
-    public void testParseLong() {
-        long l = Long.parseLong("" + System.currentTimeMillis() + "" + 10);
-        log.info("" + l);
-    }
 
     @Test
     public void testIdGen() throws InterruptedException, ExecutionException {
@@ -54,13 +50,6 @@ public class UUIDGenTest {
         }
     }
 
-    @Test
-    public void testSimple() {
-        for(int i = 0; i < IDS_PER_TASK; i++) {
-            long id = IdGenExperimental.nextId();
-        }
-    }
-
     private class GenManyIds implements Callable<List<Long>> {
 
         private List<Long> result = new ArrayList<>();
@@ -69,12 +58,12 @@ public class UUIDGenTest {
         public List<Long> call() throws Exception {
             for (int i = 0; i < IDS_PER_TASK; i++) {
                 // Thread.sleep(1);
-                long id = IdGenExperimental.nextId();
+                long id = IdGenExperimentalV2.nextId();
+                // log.info("" + id);
                 result.add(id);
             }
             return result;
         }
     }
+
 }
-
-

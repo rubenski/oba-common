@@ -3,46 +3,53 @@ package com.obaccelerator.common.id;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Produces a unique long id.
- *
- * NOTE: do not change this class without careful consideration and testing.
- * It should be able to generate 100 million unique IDs in about 1.5 minutes.
- *
- * Note that this class relies on performance of the hardware and the MAX_COUNTER to provide unique IDs.
- * It is an inherently dangerous strategy. Set MAX_XOUNTER to 99 and run a big load (unit) test on the class
- * using a ExecutorService and 1000 threads to see what I mean.
- *
  */
 @Slf4j
-public final class IdGenExperimental {
+public final class IdGenExperimentalV2 {
 
-    private static final int MAX_COUNTER = 999;
+    private static final int MAX_COUNTER = 99;
     private static long MILLIS_SINCE_2019 = 1546300800000L;
     /**
      * AtomicInteger provides direct visibility of the underlying (volatile) int value to all threads
      * and it ensures atomicity of the operations if offers.
      */
     private static AtomicInteger COUNTER = new AtomicInteger(0);
+    private static AtomicLong PREVIOUS_EPOCH = new AtomicLong(0);
 
-    /**
-     * This method is synchronized, because it turns out to be the only way to make it truly thread safe.
-     * The use of AtomicInteger as the counter is not enough, probably because we do multiple operations in getCounter()
-     *
-     * @return
-     */
     public synchronized static long nextId() {
         long currentEpoch = currentEpoch();
+        long previousEpoch = PREVIOUS_EPOCH.get();
+
+        if (currentEpoch < previousEpoch) {
+            throw new RuntimeException("The clock is going backwards! Current epoch: "
+                    + currentEpoch + ". Previous epoch: " + previousEpoch);
+        }
+
+        if (currentEpoch == previousEpoch && COUNTER.get() == MAX_COUNTER) {
+            currentEpoch = waitForNextEpochMs(currentEpoch);
+        }
+
+        PREVIOUS_EPOCH.set(currentEpoch);
+
         int counter = getCounter();
-        if(counter > MAX_COUNTER) {
+        if (counter > MAX_COUNTER) {
             throw new RuntimeException("Counter is greater than " + MAX_COUNTER + ". Its value is " + COUNTER);
         }
         try {
-            return Long.parseLong("" + currentEpoch + "" + counter);
+            return Long.parseLong("" + currentEpoch + "" + String.format("%03d", counter));
         } catch (NumberFormatException e) {
             throw new RuntimeException("epoch: " + currentEpoch + " counter: " + counter, e);
         }
+    }
+
+    private static long waitForNextEpochMs(long currentEpoch) {
+        while (currentEpoch == currentEpoch()) {
+        }
+        return currentEpoch();
     }
 
     private static int getCounter() {
