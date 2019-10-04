@@ -113,7 +113,7 @@ public class ApacheHttpsClientFactory {
             // Load the trusted servers
             if (!input.isTrustSelfSigned()) {
                 KeyStore trustStore = KeyStore.getInstance(KEYSTORE_TYPE_PKCS12);
-                trustStore.load(ApacheHttpsClientFactory.class.getResourceAsStream(input.getTrustStoreClassPath()), input.getTrustStorePw().toCharArray());
+                trustStore.load(getClassPathFileAsStream(input.getTrustStoreClassPath()), input.getTrustStorePw().toCharArray());
                 sslContextBuilder.loadTrustMaterial(new TrustSelfSignedStrategy());
                 sslContext = sslContextBuilder.build();
             } else {
@@ -131,7 +131,7 @@ public class ApacheHttpsClientFactory {
         if (input.getKeyStore() != null) {
             return input.getKeyStore();
         } else {
-            try (InputStream stream = ApacheHttpsClientFactory.class.getResourceAsStream(input.getKeyStoreClassPath())) {
+            try (InputStream stream = getClassPathFileAsStream(input.getKeyStoreClassPath())) {
                 if (stream == null) {
                     throw new IllegalArgumentException("Keystore not found at " + input.keyStoreClassPath);
                 }
@@ -142,6 +142,11 @@ public class ApacheHttpsClientFactory {
                 throw new IllegalArgumentException("Could not find or read keystore", e);
             }
         }
+    }
+
+    private static InputStream getClassPathFileAsStream(String classPath) {
+        InputStream resourceAsStream = ApacheHttpsClientFactory.class.getResourceAsStream(classPath);
+        return resourceAsStream;
     }
 }
 

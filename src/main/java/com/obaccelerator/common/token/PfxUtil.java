@@ -27,7 +27,7 @@ public class PfxUtil {
 
     public PublicKey getPublicKey(String alias) {
         Certificate certificate = getCertificate(alias);
-        if(certificate == null) {
+        if (certificate == null) {
             throw new RuntimeException("Could not find certificate for alias " + alias);
         }
         return certificate.getPublicKey();
@@ -43,13 +43,11 @@ public class PfxUtil {
     }
 
     public static KeyStore loadKeyStore(String pfxPath, String pfxPassword) {
-        InputStream keyFile = PfxUtil.class.getClassLoader().getResourceAsStream(pfxPath);
-        if (keyFile == null) {
-            throw new RuntimeException("Could not find " + pfxPath);
-        }
-
         KeyStore ks = null;
-        try {
+        try (InputStream keyFile = PfxUtil.class.getResourceAsStream(pfxPath)) {
+            if (keyFile == null) {
+                throw new RuntimeException("Could not find " + pfxPath);
+            }
             ks = KeyStore.getInstance("PKCS12", "SunJSSE");
             ks.load(keyFile, pfxPassword.toCharArray());
             return ks;
