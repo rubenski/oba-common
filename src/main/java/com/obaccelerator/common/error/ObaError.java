@@ -40,6 +40,8 @@ public enum ObaError {
     OBA_CLIENT_ERROR_INVALID_REQUEST("OBA005", "Invalid client request", "Invalid client request", 400),
     OBA_ENTITY_NOT_FOUND("OBA006", "Entity not found", "Entity not found", 404),
     OBA_CLIENT_ERROR_INVALID_UUID_PROVIDED("OBA007", OBA007, OBA007, 400),
+    OBA_INVALID_CONTENT_TYPE("OBA008", OBA008, OBA008, 400),
+    OBA_DB_INTEGRITY_CONSTRAINT_VIOLATION_EXCEPTION("OBA009", TECHNICAL_ERROR, "Db integrity constraint violation", 500),
 
     /**
      * OBA Gateway errors
@@ -69,6 +71,7 @@ public enum ObaError {
         // Generic
         public static final String TECHNICAL_ERROR = "Technical error";
         public static final String OBA007 = "One or more fields contain an invalid UUID format";
+        public static final String OBA008 = "Invalid content type or missing content-type header";
 
         // Client
         public static final String APP001 = "Application id in token and uri do not match";
