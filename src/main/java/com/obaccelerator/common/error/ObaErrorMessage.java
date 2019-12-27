@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -25,6 +27,15 @@ public class ObaErrorMessage {
     private String code;
 
     public ObaErrorMessage(int status, String code, String message) {
+
+        if(isBlank(code)) {
+            throw new IllegalArgumentException("Code cannot be blank");
+        }
+
+        if(isBlank(message)) {
+            throw new IllegalArgumentException("Message cannot be blank");
+        }
+
         this.status = status;
         this.code = code;
         this.message = message;

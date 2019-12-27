@@ -31,6 +31,7 @@ public enum ObaError {
     TOKEN_CLIENT_ID_DOESNT_EXIST("TKN006", TKN_CLIENT_MESSAGE_INVALID_TOKEN, TKN006, 400),
     TOKEN_AUTHENTICATION_TOKEN_PROCESSING_ERROR("TKN007", TKN_CLIENT_MESSAGE_INVALID_TOKEN, TKN007, 400),
     TOKEN_ELEVATED_AUTHENTICATION_TOKEN_INVALID_ROLE_CLAIM("TKN008", TKN_CLIENT_MESSAGE_INVALID_TOKEN, TKN008, 400),
+    TOKEN_EMPTY("TKN009", TKN009, TKN009, 400),
 
     // OBA Generic
     OBA_TECHNICAL_ERROR("OBA001", TECHNICAL_ERROR, TECHNICAL_ERROR, 500),
@@ -42,6 +43,7 @@ public enum ObaError {
     OBA_CLIENT_ERROR_INVALID_UUID_PROVIDED("OBA007", OBA007, OBA007, 400),
     OBA_INVALID_CONTENT_TYPE("OBA008", OBA008, OBA008, 400),
     OBA_DB_INTEGRITY_CONSTRAINT_VIOLATION_EXCEPTION("OBA009", TECHNICAL_ERROR, "Db integrity constraint violation", 500),
+    OBA_MISSING_AUTHORIZATION_HEADER_ERROR("OBA010", OBA010, OBA010, 400),
 
     /**
      * OBA Gateway errors
@@ -72,6 +74,7 @@ public enum ObaError {
         public static final String TECHNICAL_ERROR = "Technical error";
         public static final String OBA007 = "One or more fields contain an invalid UUID format";
         public static final String OBA008 = "Invalid content type or missing content-type header";
+        public static final String OBA010 = "Authorization header is missing";
 
         // Client
         public static final String APP001 = "Application id in token and uri do not match";
@@ -94,6 +97,7 @@ public enum ObaError {
         public static final String TKN006 = "The client id provided in the authentication token does not exist";
         public static final String TKN007 = "Unable to process authentication token";
         public static final String TKN008 = "Invalid 'role' claim";
+        public static final String TKN009 = "Token is empty";
 
         // Gateway
         public static final String GTW001 = "API token signature is invalid";

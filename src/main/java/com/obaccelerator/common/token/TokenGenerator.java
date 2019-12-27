@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.obaccelerator.common.ObaConstant.CLIENT_ID_CLAIM;
+import static com.obaccelerator.common.ObaConstant.APPLICATION_ID_CLAIM;
 import static com.obaccelerator.common.ObaConstant.ROLE_CLAIM;
 
 @Slf4j
@@ -31,19 +31,19 @@ public class TokenGenerator {
         privateKey = new PfxUtil(pfxPath, pfxPassword).getPrivateKey(privateKeyAlias);
     }
 
-    public String generateApiToken(String clientId, String externalClientRoleName) {
+    public String generateApiToken(String applicationId, String externalClientRoleName) {
         return generateToken(API_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
-                    put(CLIENT_ID_CLAIM, clientId);
+                    put(APPLICATION_ID_CLAIM, applicationId);
                     put(ROLE_CLAIM, externalClientRoleName);
                 }},
                 Collections.emptyMap());
     }
 
-    public String generateInternalToken(String clientId, String internalClientRoleName) {
+    public String generateInternalToken(String applicationId, String internalClientRoleName) {
         return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
-                    put(CLIENT_ID_CLAIM, clientId);
+                    put(APPLICATION_ID_CLAIM, applicationId);
                     put(ROLE_CLAIM, internalClientRoleName);
                 }},
                 Collections.emptyMap());

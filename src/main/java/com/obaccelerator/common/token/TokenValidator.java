@@ -20,7 +20,7 @@ public class TokenValidator {
     private static final String TOKEN_EXPIRED_MESSAGE = "API token expired";
     private static final String TOKEN_PROCESSING_EXCEPTION_MESSAGE = "Could not process token";
 
-    public static void validateClientToken(final String token, final PublicKey publicKey) throws ApiTokenValidationException {
+    public static void validateToken(final String token, final PublicKey publicKey) throws ApiTokenValidationException {
 
         verifySignature(token, publicKey);
 

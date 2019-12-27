@@ -36,7 +36,11 @@ public class PfxUtil {
 
     public Key getPrivateKey(String alias) {
         try {
-            return keyStore.getKey(alias, pfxPassword.toCharArray());
+            Key key = keyStore.getKey(alias, pfxPassword.toCharArray());
+            if(key == null) {
+                throw new RuntimeException("Could not find key for alias " + alias);
+            }
+            return key;
         } catch (NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException e) {
             throw new RuntimeException("Could not load private key", e);
         }

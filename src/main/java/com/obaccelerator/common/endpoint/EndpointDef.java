@@ -16,12 +16,14 @@ public enum EndpointDef {
     POST_APPLICATION(RequestMethod.POST.name(), Path.POST_APPLICATION, EndpointAccessType.PORTAL_CLIENT),
     POST_USER(RequestMethod.POST.name(), Path.POST_USERS, EndpointAccessType.API_CLIENT),
     GET_USER(RequestMethod.GET.name(), Path.GET_USERS, EndpointAccessType.API_CLIENT),
-    DELETE_CLIENTS(RequestMethod.DELETE.name(), Path.DELETE_CLIENTS, EndpointAccessType.PORTAL_CLIENT),
-    POST_CLIENT_KEY(RequestMethod.POST.name(), Path.POST_CLIENTS_KEYS, EndpointAccessType.PORTAL_CLIENT),
-    GET_CLIENT_KEYS(RequestMethod.GET.name(), Path.GET_CLIENTS_KEYS, EndpointAccessType.API_CLIENT),
+    DELETE_APPLICATIONS(RequestMethod.DELETE.name(), Path.DELETE_APPLICATIONS, EndpointAccessType.PORTAL_CLIENT),
+    POST_APPLICATION_KEYS(RequestMethod.POST.name(), Path.POST_APPLICATION_KEYS, EndpointAccessType.PORTAL_CLIENT),
+    GET_APPLICATION_KEYS(RequestMethod.GET.name(), Path.GET_APPLICATION_KEYS, EndpointAccessType.API_CLIENT),
     POST_ORGANIZATIONS(RequestMethod.POST.name(), Path.POST_ORGANIZATIONS, EndpointAccessType.PORTAL_CLIENT),
     GET_ORGANIZATIONS(RequestMethod.GET.name(), Path.GET_ORGANIZATIONS, EndpointAccessType.PORTAL_CLIENT),
-    POST_SESSIONS(RequestMethod.POST.name(), Path.POST_SESSIONS, EndpointAccessType.PORTAL_CLIENT);
+    GET_ORGANIZATION(RequestMethod.GET.name(), Path.GET_ORGANIZATION, EndpointAccessType.PORTAL_CLIENT),
+    POST_SESSIONS(RequestMethod.POST.name(), Path.POST_SESSIONS, EndpointAccessType.PORTAL_CLIENT),
+    GET_TRANSACTIONS(RequestMethod.GET.name(), Path.GET_TRANSACTIONS, EndpointAccessType.API_CLIENT);
 
     private static final Map<String, Pattern> CACHE = new HashMap<>();
     private final String method;
@@ -38,13 +40,15 @@ public enum EndpointDef {
         public static final String GET_USERS = "/users/{userId}";
         public static final String POST_USERS = "/users";
         public static final String POST_APPLICATION = "/applications";
-        public static final String POST_CLIENTS_KEYS = "/applications/{applicationId}/keys";
-        public static final String GET_CLIENTS_KEYS = "/applications/{applicationId}/keys";
-        public static final String DELETE_CLIENTS = "/applications/{applicationId}";
+        public static final String POST_APPLICATION_KEYS = "/applications/{applicationId}/keys";
+        public static final String GET_APPLICATION_KEYS = "/applications/{applicationId}/keys";
+        public static final String DELETE_APPLICATIONS = "/applications/{applicationId}";
         public static final String GET_TOKENS = "/tokens";
         public static final String POST_ORGANIZATIONS = "/organizations";
         public static final String GET_ORGANIZATIONS = "/organizations";
+        public static final String GET_ORGANIZATION = "/organizations/{organizationId}";
         public static final String POST_SESSIONS = "/sessions";
+        public static final String GET_TRANSACTIONS = "/transactions";
     }
 
     public static EndpointDef getEndpoint(HttpServletRequest request) throws EndpointUndefinedException {
@@ -66,7 +70,7 @@ public enum EndpointDef {
                 }
             }
         }
-        throw new EndpointUndefinedException("Endpoint " + method + " " + requestUri + " is undefined");
+        throw new EndpointUndefinedException(method + " " + requestUri + " not found");
     }
 
     public boolean isOpenEndpoint() {

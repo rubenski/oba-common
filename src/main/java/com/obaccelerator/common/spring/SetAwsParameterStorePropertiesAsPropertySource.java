@@ -16,7 +16,7 @@ import java.util.Properties;
  * Collects all properties present in AWS Parameter Store and checks their keys against a map provided by the application
  * in the abstract method. The matching properties are inserted into the Spring environment with the key coming
  * from the map and the value from AWS Parameter Store.
- *
+ * <p>
  * This strategy allows an application to set for example predefined Spring properties with values from AWS
  * Parameter Store.
  */
@@ -35,11 +35,9 @@ public abstract class SetAwsParameterStorePropertiesAsPropertySource implements 
 
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
 
-        DescribeParametersResult describeParametersResult = AWS_CLIENT.describeParameters(new DescribeParametersRequest());
-
         Map<String, List<String>> awsParametersToNeededProperties = getAwsParametersToNeededProperties();
         Properties secureProps = new Properties();
-        if(awsParametersToNeededProperties != null) {
+        if (awsParametersToNeededProperties != null) {
             for (Map.Entry<String, List<String>> propertyEntry : awsParametersToNeededProperties.entrySet()) {
                 String awsProperty = propertyEntry.getKey();
                 List<String> setAsProperties = propertyEntry.getValue();
@@ -52,17 +50,15 @@ public abstract class SetAwsParameterStorePropertiesAsPropertySource implements 
         event.getEnvironment().getPropertySources().addFirst(new PropertiesPropertySource("myProps", secureProps));
     }
 
-    public String fetchAwsPropertyValue(String awsProperty) {
+    String fetchAwsPropertyValue(String awsProperty) {
         GetParameterRequest getParameterRequest = new GetParameterRequest();
         getParameterRequest.setName(awsProperty);
         getParameterRequest.setWithDecryption(true);
         try {
             GetParameterResult parameterResult = AWS_CLIENT.getParameter(getParameterRequest);
             return parameterResult.getParameter().getValue();
-        } catch(ParameterNotFoundException e) {
+        } catch (ParameterNotFoundException e) {
             throw new RuntimeException("Could not find parameter " + awsProperty + " in AWS", e);
         }
-
-
     }
 }
