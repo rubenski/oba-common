@@ -4,8 +4,6 @@ services:
 
 stages:
   - build
-  - test
-  - release
 
 variables:
   # Use TLS https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#tls-enabled
