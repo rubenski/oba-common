@@ -12,7 +12,8 @@ import java.util.regex.Pattern;
 @Getter
 public enum EndpointDef {
 
-    GET_TOKEN(RequestMethod.GET.name(), Path.GET_TOKENS, EndpointAccessType.OPEN),
+    GET_TOKENS(RequestMethod.GET.name(), Path.GET_TOKENS, EndpointAccessType.OPEN),
+    GET_ELEVATED_TOKENS(RequestMethod.GET.name(), Path.GET_ELEVATED_TOKENS, EndpointAccessType.OPEN),
     POST_APPLICATION(RequestMethod.POST.name(), Path.POST_APPLICATION, EndpointAccessType.PORTAL_CLIENT),
     POST_USER(RequestMethod.POST.name(), Path.POST_USERS, EndpointAccessType.API_CLIENT),
     GET_USER(RequestMethod.GET.name(), Path.GET_USERS, EndpointAccessType.API_CLIENT),
@@ -44,6 +45,7 @@ public enum EndpointDef {
         public static final String GET_APPLICATION_KEYS = "/applications/{applicationId}/keys";
         public static final String DELETE_APPLICATIONS = "/applications/{applicationId}";
         public static final String GET_TOKENS = "/tokens";
+        public static final String GET_ELEVATED_TOKENS = "/elevated-tokens";
         public static final String POST_ORGANIZATIONS = "/organizations";
         public static final String GET_ORGANIZATIONS = "/organizations";
         public static final String GET_ORGANIZATION = "/organizations/{organizationId}";
