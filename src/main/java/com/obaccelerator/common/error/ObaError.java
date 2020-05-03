@@ -60,7 +60,8 @@ public enum ObaError {
     PORTAL_COULD_NOT_SEND_REGISTRATION_EMAIL("PRT001", TECHNICAL_ERROR, "Could not send registration email", 500),
     PORTAL_INVALID_COGNITO_TOKEN("PRT002", TECHNICAL_ERROR, "Invalid Cognito token received", 500),
     PORTAL_REGISTRATION_ALREADY_EXISTS("PRT003", PRT003, PRT003, 400),
-    PORTAL_MISSING_SESSION("PRT004", PRT004, PRT004, 401);
+    PORTAL_MISSING_SESSION("PRT004", PRT004, PRT004, 401),
+    PORTAL_NOT_AUTHORIZED("PRT005", PRT005, PRT005, 403);
 
 
     private final String code;
@@ -109,6 +110,7 @@ public enum ObaError {
         // Portal
         public static final String PRT003 = "Registration already exists";
         public static final String PRT004 = "Session missing";
+        public static final String PRT005 = "Not authorized";
 
     }
 
