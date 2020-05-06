@@ -30,85 +30,90 @@ public abstract class ObaBaseExceptionHandler {
     @ExceptionHandler(value = {Throwable.class})
     public ResponseEntity<ObaErrorMessage> handleRuntimeException(Throwable e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_TECHNICAL_ERROR);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = {DataAccessException.class})
     public ResponseEntity<ObaErrorMessage> handleDataAccessException(DataAccessException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_DB_EXCEPTION);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = {SQLException.class})
     public ResponseEntity<ObaErrorMessage> handleSqlException(SQLException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_DB_EXCEPTION);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = {HttpMessageConversionException.class})
     public ResponseEntity<ObaErrorMessage> handleHttpMessageNotReadableException(HttpMessageConversionException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_CLIENT_ERROR_INVALID_REQUEST);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = {ServletRequestBindingException.class})
     public ResponseEntity<ObaErrorMessage> handleServletRequestBindingException(ServletRequestBindingException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_CLIENT_ERROR_INVALID_REQUEST);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = {EntityNotFoundException.class})
     public ResponseEntity<ObaErrorMessage> handleEntityNotFoundException(EntityNotFoundException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_ENTITY_NOT_FOUND);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = {UuidInvalidException.class})
     public ResponseEntity<ObaErrorMessage> handleUuidInvalidException(UuidInvalidException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_CLIENT_ERROR_INVALID_UUID_PROVIDED);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<ObaErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(400, null, "Your message contained errors");
         errorMessage.addFieldErrors(collectBindingErrors(e));
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = InvalidKeyException.class)
     public ResponseEntity<ObaErrorMessage> handleInvalidKeyException(InvalidKeyException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError. APPLICATION_KEYS_INVALID_KEY);
         errorMessage.addFieldErrors(collectBindingErrors(e));
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = {SQLIntegrityConstraintViolationException.class})
     public ResponseEntity<ObaErrorMessage> handleSqlException(SQLIntegrityConstraintViolationException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_DB_INTEGRITY_CONSTRAINT_VIOLATION_EXCEPTION);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = {ObaException.class})
     public ResponseEntity<ObaErrorMessage> handleObaException(ObaException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(e);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ObaErrorMessage> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_INVALID_CONTENT_TYPE);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = MissingRequestHeaderException.class)
     public ResponseEntity<ObaErrorMessage> handleMissingRequestHeaderException(MissingRequestHeaderException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_MISSING_AUTHORIZATION_HEADER_ERROR);
-        return handle(errorMessage, e);
+        return handleAsError(errorMessage, e);
     }
 
-    protected ResponseEntity<ObaErrorMessage> handle(ObaErrorMessage errorMessage, Throwable e) {
+    protected ResponseEntity<ObaErrorMessage> handleAsError(ObaErrorMessage errorMessage, Throwable e) {
         log.error(ERROR_PREFIX, e);
+        return new ResponseEntity<>(errorMessage, HttpStatus.valueOf(errorMessage.getStatus()));
+    }
+
+    protected ResponseEntity<ObaErrorMessage> handleAsInfo(ObaErrorMessage errorMessage, Throwable e) {
+        log.info(ERROR_PREFIX, e);
         return new ResponseEntity<>(errorMessage, HttpStatus.valueOf(errorMessage.getStatus()));
     }
 
