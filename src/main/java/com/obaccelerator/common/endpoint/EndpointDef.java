@@ -21,6 +21,7 @@ public enum EndpointDef {
     POST_APPLICATION_KEYS(RequestMethod.POST.name(), Path.POST_APPLICATION_KEYS, EndpointAccessType.PORTAL_CLIENT),
     GET_APPLICATION_KEYS(RequestMethod.GET.name(), Path.GET_APPLICATION_KEYS, EndpointAccessType.API_CLIENT),
     POST_ORGANIZATIONS(RequestMethod.POST.name(), Path.POST_ORGANIZATIONS, EndpointAccessType.PORTAL_CLIENT),
+    PUT_ORGANIZATIONS(RequestMethod.PUT.name(), Path.PUT_ORGANIZATIONS, EndpointAccessType.PORTAL_CLIENT),
     GET_ORGANIZATIONS(RequestMethod.GET.name(), Path.GET_ORGANIZATIONS, EndpointAccessType.PORTAL_CLIENT),
     GET_ORGANIZATION(RequestMethod.GET.name(), Path.GET_ORGANIZATION, EndpointAccessType.PORTAL_CLIENT),
     POST_SESSIONS(RequestMethod.POST.name(), Path.POST_SESSIONS, EndpointAccessType.PORTAL_CLIENT),
@@ -29,7 +30,7 @@ public enum EndpointDef {
     private static final Map<String, Pattern> CACHE = new HashMap<>();
     private final String method;
     private final String path;
-    private EndpointAccessType accessType;
+    private final EndpointAccessType accessType;
 
     EndpointDef(String method, String path, EndpointAccessType accessType) {
         this.method = method;
@@ -47,6 +48,7 @@ public enum EndpointDef {
         public static final String GET_TOKENS = "/tokens";
         public static final String GET_ELEVATED_TOKENS = "/elevated-tokens";
         public static final String POST_ORGANIZATIONS = "/organizations";
+        public static final String PUT_ORGANIZATIONS = "/organizations";
         public static final String GET_ORGANIZATIONS = "/organizations";
         public static final String GET_ORGANIZATION = "/organizations/{organizationId}";
         public static final String POST_SESSIONS = "/sessions";
