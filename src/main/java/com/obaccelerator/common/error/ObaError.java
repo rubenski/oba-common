@@ -65,9 +65,9 @@ public enum ObaError {
 
 
     private final String code;
-    private String clientMessage;
-    private String logMessage;
-    private int httpStatus;
+    private final String clientMessage;
+    private final String logMessage;
+    private final int httpStatus;
 
     // Java magic below (avoid illegal forward reference by adding static inner class)
     public static class ErrorMessages {

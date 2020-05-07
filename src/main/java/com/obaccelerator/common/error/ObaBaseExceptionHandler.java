@@ -71,14 +71,14 @@ public abstract class ObaBaseExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public ResponseEntity<ObaErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, WebRequest webRequest) {
-        ObaErrorMessage errorMessage = new ObaErrorMessage(400, null, "Your message contained errors");
+        ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_CLIENT_ERROR_INVALID_REQUEST);
         errorMessage.addFieldErrors(collectBindingErrors(e));
         return handleAsError(errorMessage, e);
     }
 
     @ExceptionHandler(value = InvalidKeyException.class)
     public ResponseEntity<ObaErrorMessage> handleInvalidKeyException(InvalidKeyException e, WebRequest webRequest) {
-        ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError. APPLICATION_KEYS_INVALID_KEY);
+        ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.APPLICATION_KEYS_INVALID_KEY);
         errorMessage.addFieldErrors(collectBindingErrors(e));
         return handleAsError(errorMessage, e);
     }
