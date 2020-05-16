@@ -27,6 +27,8 @@ public class CryptoUtil {
     public static final int GCM_IV_LENGTH = 12;
     public static final int GCM_TAG_LENGTH = 16;
 
+    private static final String GCM_ALGO = "AES/GCM/NoPadding";
+
     // Output contains the IV in the first block
     public static byte[] encryptCbc(SecretKey secretKey, String plainText) {
         try {
@@ -85,9 +87,9 @@ public class CryptoUtil {
         return iv;
     }
 
-    public static byte[] encrypt(byte[] plaintext, SecretKey key, byte[] iv) throws Exception {
+    public static byte[] encryptGcm(byte[] plaintext, SecretKey key, byte[] iv) throws Exception {
         // Get Cipher Instance
-        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        Cipher cipher = Cipher.getInstance(GCM_ALGO);
         // Create SecretKeySpec
         SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
         // Create GCMParameterSpec
@@ -98,9 +100,9 @@ public class CryptoUtil {
         return cipher.doFinal(plaintext);
     }
 
-    public static String decrypt(byte[] cipherText, SecretKey key, byte[] IV) throws Exception {
+    public static String decryptGcm(byte[] cipherText, SecretKey key, byte[] IV) throws Exception {
         // Get Cipher Instance
-        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        Cipher cipher = Cipher.getInstance(GCM_ALGO);
 
         // Create SecretKeySpec
         SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
