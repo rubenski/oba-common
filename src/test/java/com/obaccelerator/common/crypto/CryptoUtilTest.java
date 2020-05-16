@@ -3,7 +3,6 @@ package com.obaccelerator.common.crypto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.SecureRandom;
 
@@ -19,10 +18,8 @@ class CryptoUtilTest {
         byte[] key = new byte[16];
         secureRandom.nextBytes(key);
         SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
-        GCMParameterSpec parameterSpec = new GCMParameterSpec(128 * Byte.SIZE, "kdjdjlwqijowljdlqi".getBytes());
-        byte[] iv = parameterSpec.getIV();
-        byte[] encrypted = CryptoUtil.encryptGcm(plainText.getBytes(), secretKeySpec, iv);
-        String s = CryptoUtil.decryptGcm(encrypted, secretKeySpec, iv);
+        CryptoUtil.EncryptionResult result = CryptoUtil.encryptGcm(plainText.getBytes(), secretKeySpec);
+        String s = CryptoUtil.decryptGcm(result.getCypherText(), secretKeySpec, result.getIv());
         assertEquals("Zomaar wat", s);
     }
 }

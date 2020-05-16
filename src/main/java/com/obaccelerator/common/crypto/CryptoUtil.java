@@ -1,5 +1,6 @@
 package com.obaccelerator.common.crypto;
 
+import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.Cipher;
@@ -87,20 +88,35 @@ public class CryptoUtil {
         return iv;
     }
 
-    public static byte[] encryptGcm(byte[] plaintext, SecretKey key, byte[] iv) throws Exception {
+    public static EncryptionResult encryptGcm(byte[] plaintext, SecretKey key) throws Exception {
+        byte[] iv = generateIv();
+        GCMParameterSpec parameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
         // Get Cipher Instance
         Cipher cipher = Cipher.getInstance(GCM_ALGO);
         // Create SecretKeySpec
         SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
         // Create GCMParameterSpec
-        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
         // Initialize Cipher for ENCRYPT_MODE
-        cipher.init(Cipher.ENCRYPT_MODE, keySpec, gcmParameterSpec);
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec);
         // Perform Encryption
-        return cipher.doFinal(plaintext);
+        byte[] bytes = cipher.doFinal(plaintext);
+        return new EncryptionResult(iv, bytes);
     }
 
-    public static String decryptGcm(byte[] cipherText, SecretKey key, byte[] IV) throws Exception {
+    private static byte[] generateIv() {
+        SecureRandom sRandom = null;
+        try {
+            sRandom = SecureRandom.getInstance("SHA1PRNG");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        byte[] iv = new byte[128 / 8];
+        sRandom.nextBytes(iv);
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+        return ivSpec.getIV();
+    }
+
+    public static String decryptGcm(byte[] cipherText, SecretKey key, byte[] iv) throws Exception {
         // Get Cipher Instance
         Cipher cipher = Cipher.getInstance(GCM_ALGO);
 
@@ -108,7 +124,7 @@ public class CryptoUtil {
         SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
 
         // Create GCMParameterSpec
-        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, IV);
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
 
         // Initialize Cipher for DECRYPT_MODE
         cipher.init(Cipher.DECRYPT_MODE, keySpec, gcmParameterSpec);
@@ -142,5 +158,11 @@ public class CryptoUtil {
         } catch (CertificateException e) {
             throw new RuntimeException("Could not convert String certificate to java.security.cert.Certificate");
         }
+    }
+
+    @Value
+    public static class EncryptionResult {
+        byte[] iv;
+        byte[] cypherText;
     }
 }
