@@ -107,11 +107,11 @@ public class RequestExecutor<I, O> {
     }
 
     private String getRequestBodyAsString(HttpUriRequest request) {
-        HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
-        if (entity == null) {
-            return null;
+        if(request instanceof HttpEntityEnclosingRequest) {
+            HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+            return getContent(entity);
         }
-        return getContent(entity);
+        return null;
     }
 
     private String getResponseBodyAsString(HttpResponse httpResponse) {
