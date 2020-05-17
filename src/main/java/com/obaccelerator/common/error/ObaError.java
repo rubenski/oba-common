@@ -33,6 +33,9 @@ public enum ObaError {
     TOKEN_ELEVATED_AUTHENTICATION_TOKEN_INVALID_ROLE_CLAIM("TKN008", TKN_CLIENT_MESSAGE_INVALID_TOKEN, TKN008, 400),
     TOKEN_EMPTY("TKN009", TKN009, TKN009, 400),
 
+    // Tokens
+    CERTIFICATE_LIMIT_REACHED("CRT001", CRT001, CRT001, 403),
+
     // OBA Generic
     OBA_TECHNICAL_ERROR("OBA001", TECHNICAL_ERROR, TECHNICAL_ERROR, 500),
     OBA_DB_EXCEPTION("OBA002", TECHNICAL_ERROR, "Data access or SQL exception", 500),
@@ -55,7 +58,7 @@ public enum ObaError {
 
 
     /**
-     * OBA portal errrors
+     * OBA portal errors
      */
     PORTAL_COULD_NOT_SEND_REGISTRATION_EMAIL("PRT001", TECHNICAL_ERROR, "Could not send registration email", 500),
     PORTAL_INVALID_COGNITO_TOKEN("PRT002", TECHNICAL_ERROR, "Invalid Cognito token received", 500),
@@ -100,6 +103,9 @@ public enum ObaError {
         public static final String TKN007 = "Unable to process authentication token";
         public static final String TKN008 = "Invalid 'role' claim";
         public static final String TKN009 = "Token is empty";
+
+        // Certificates
+        public static final String CRT001 = "Certificates limit reached";
 
         // Gateway
         public static final String GTW001 = "API token signature is invalid";
