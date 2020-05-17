@@ -26,7 +26,8 @@ public enum EndpointDef {
     GET_ORGANIZATION(RequestMethod.GET.name(), Path.GET_ORGANIZATION, EndpointAccessType.PORTAL_CLIENT),
     POST_SESSIONS(RequestMethod.POST.name(), Path.POST_SESSIONS, EndpointAccessType.PORTAL_CLIENT),
     GET_TRANSACTIONS(RequestMethod.GET.name(), Path.GET_TRANSACTIONS, EndpointAccessType.API_CLIENT),
-    POST_CERTIFICATES(RequestMethod.POST.name(), Path.POST_CERTIFICATES, EndpointAccessType.PORTAL_CLIENT);
+    POST_CERTIFICATES(RequestMethod.POST.name(), Path.POST_CERTIFICATES, EndpointAccessType.PORTAL_CLIENT),
+    GET_CERTIFICATES(RequestMethod.GET.name(), Path.GET_CERTIFICATES, EndpointAccessType.PORTAL_CLIENT);
 
     private static final Map<String, Pattern> CACHE = new HashMap<>();
     private final String method;
@@ -55,6 +56,7 @@ public enum EndpointDef {
         public static final String POST_SESSIONS = "/sessions";
         public static final String GET_TRANSACTIONS = "/transactions";
         public static final String POST_CERTIFICATES = "/{organizationId}/certificates";
+        public static final String GET_CERTIFICATES = "/{organizationId}/certificates";
     }
 
     public static EndpointDef getEndpoint(HttpServletRequest request) throws EndpointUndefinedException {
