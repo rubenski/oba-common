@@ -1,13 +1,11 @@
 package com.obaccelerator.common.rest;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
-public abstract class RestResponse {
+public abstract class RestListResponse<T> {
     UUID requestId;
     OffsetDateTime time;
-
-    protected abstract UUID getId();
-
-    protected abstract OffsetDateTime getCreated();
+    List<T> result;
 }
