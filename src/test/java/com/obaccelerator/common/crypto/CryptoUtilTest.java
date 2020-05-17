@@ -19,7 +19,8 @@ class CryptoUtilTest {
         secureRandom.nextBytes(key);
         SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
         CryptoUtil.EncryptionResult result = CryptoUtil.encryptGcm(plainText.getBytes(), secretKeySpec);
-        String s = CryptoUtil.decryptGcm(result.getCypherText(), secretKeySpec, result.getIv());
+        String s = CryptoUtil.decryptGcm(result.getCipherText(), secretKeySpec, result.getIv());
+        log.info(new String(result.getIv()));
         assertEquals("Zomaar wat", s);
     }
 }

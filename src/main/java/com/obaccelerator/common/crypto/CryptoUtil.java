@@ -3,9 +3,7 @@ package com.obaccelerator.common.crypto;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -88,19 +86,25 @@ public class CryptoUtil {
         return iv;
     }
 
-    public static EncryptionResult encryptGcm(byte[] plaintext, SecretKey key) throws Exception {
+    public static EncryptionResult encryptGcm(byte[] plaintext, SecretKey key) {
         byte[] iv = generateIv();
         GCMParameterSpec parameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
         // Get Cipher Instance
-        Cipher cipher = Cipher.getInstance(GCM_ALGO);
-        // Create SecretKeySpec
-        SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
-        // Create GCMParameterSpec
-        // Initialize Cipher for ENCRYPT_MODE
-        cipher.init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec);
-        // Perform Encryption
-        byte[] bytes = cipher.doFinal(plaintext);
-        return new EncryptionResult(iv, bytes);
+        Cipher cipher = null;
+        try {
+            cipher = Cipher.getInstance(GCM_ALGO);
+            // Create SecretKeySpec
+            SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
+            // Create GCMParameterSpec
+            // Initialize Cipher for ENCRYPT_MODE
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec);
+            // Perform Encryption
+            byte[] bytes = cipher.doFinal(plaintext);
+            return new EncryptionResult(iv, bytes);
+        } catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
+                | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static byte[] generateIv() {
@@ -163,6 +167,6 @@ public class CryptoUtil {
     @Value
     public static class EncryptionResult {
         byte[] iv;
-        byte[] cypherText;
+        byte[] cipherText;
     }
 }
