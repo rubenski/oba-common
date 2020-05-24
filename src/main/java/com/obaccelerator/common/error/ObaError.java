@@ -55,6 +55,7 @@ public enum ObaError {
     GATEWAY_API_TOKEN_PROCESSING_ERROR("GTW002", GTW002, GTW002, 400),
     GATEWAY_API_TOKEN_EXPIRED("GTW003", GTW003, GTW003, 400),
     GATEWAY_API_TOKEN_INVALID("GTW004", GTW004, GTW004, 400),
+    GATEWAY_ZUUL_ERROR("GTW005", GTW005, "The gateway ran into a ZuulException that was caught by the ErrorFilter", 500),
 
 
     /**
@@ -65,7 +66,6 @@ public enum ObaError {
     PORTAL_REGISTRATION_ALREADY_EXISTS("PRT003", PRT003, PRT003, 400),
     PORTAL_MISSING_SESSION("PRT004", PRT004, PRT004, 401),
     PORTAL_NOT_AUTHORIZED("PRT005", PRT005, PRT005, 403);
-
 
     private final String code;
     private final String clientMessage;
@@ -112,6 +112,7 @@ public enum ObaError {
         public static final String GTW002 = "Unable to process API token";
         public static final String GTW003 = "API token expired";
         public static final String GTW004 = "API token expired";
+        public static final String GTW005 = "Generic gateway error";
 
         // Portal
         public static final String PRT003 = "Registration already exists";

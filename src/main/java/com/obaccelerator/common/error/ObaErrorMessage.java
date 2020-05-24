@@ -1,6 +1,6 @@
 package com.obaccelerator.common.error;
 
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.obaccelerator.common.date.DateUtil;
 import lombok.AllArgsConstructor;
@@ -19,6 +19,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ObaErrorMessage {
 
+
     private OffsetDateTime timestamp = DateUtil.utcOffsetDateTimeNow();
     private List<FieldError> fieldErrors;
     private String errorCode;
@@ -28,11 +29,11 @@ public class ObaErrorMessage {
 
     public ObaErrorMessage(int status, String code, String message) {
 
-        if(isBlank(code)) {
+        if (isBlank(code)) {
             throw new IllegalArgumentException("Code cannot be blank");
         }
 
-        if(isBlank(message)) {
+        if (isBlank(message)) {
             throw new IllegalArgumentException("Message cannot be blank");
         }
 
@@ -54,7 +55,7 @@ public class ObaErrorMessage {
     }
 
     public void addFieldErrors(Map<String, String> fieldErrors) {
-        if(fieldErrors == null) {
+        if (fieldErrors == null) {
             return;
         }
         this.fieldErrors = new ArrayList<>();
