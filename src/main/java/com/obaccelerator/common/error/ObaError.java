@@ -47,7 +47,8 @@ public enum ObaError {
     OBA_INVALID_CONTENT_TYPE("OBA008", OBA008, OBA008, 400),
     OBA_DB_INTEGRITY_CONSTRAINT_VIOLATION_EXCEPTION("OBA009", TECHNICAL_ERROR, "Db integrity constraint violation", 500),
     OBA_MISSING_AUTHORIZATION_HEADER_ERROR("OBA010", OBA010, OBA010, 400),
-    OBA_FILTER_ERROR("OBA11", OBA011, "An exception occurred in a filter", 500),
+    OBA_FILTER_ERROR("OBA011", OBA011, "An exception occurred in a filter", 500),
+    OBA_ACCESS_DENIED("OBA012", OBA012, OBA012, 403),
 
     /**
      * OBA Gateway errors
@@ -82,8 +83,9 @@ public enum ObaError {
         public static final String OBA008 = "Invalid content type or missing content-type header";
         public static final String OBA010 = "Authorization header is missing";
         public static final String OBA011 = "Technical error";
+        public static final String OBA012 = "Access denied";
 
-        // Client
+        // Application
         public static final String APP001 = "Application id in token and uri do not match";
         public static final String APP002 = "You have reached the maximum number of allowed keys";
         public static final String APP003 = "Key id already exists";
