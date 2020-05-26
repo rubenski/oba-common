@@ -19,7 +19,6 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ObaErrorMessage {
 
-
     private OffsetDateTime timestamp = DateUtil.utcOffsetDateTimeNow();
     private List<FieldError> fieldErrors;
     private String errorCode;
