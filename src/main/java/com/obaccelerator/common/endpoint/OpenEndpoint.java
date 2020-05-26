@@ -28,7 +28,7 @@ public enum OpenEndpoint {
         public static final String GET_TOKENS = "/tokens";
     }
 
-    public static Optional<OpenEndpoint> getEndpoint(HttpServletRequest request) throws EndpointUndefinedException {
+    public static boolean isOpenEndpoint(HttpServletRequest request)  {
         String requestUri = request.getRequestURI();
         String method = request.getMethod();
         for (OpenEndpoint endpoint : OpenEndpoint.values()) {
@@ -43,11 +43,11 @@ public enum OpenEndpoint {
                 Matcher matcher = regexPattern.matcher(requestUri);
                 boolean matches = matcher.matches();
                 if (matches) {
-                    return Optional.of(endpoint);
+                    return true;
                 }
             }
         }
-        return Optional.empty();
+        return false;
     }
 
 
