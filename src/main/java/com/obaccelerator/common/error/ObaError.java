@@ -58,6 +58,7 @@ public enum ObaError {
     GATEWAY_API_TOKEN_EXPIRED("GTW003", GTW003, GTW003, 400),
     GATEWAY_API_TOKEN_INVALID("GTW004", GTW004, GTW004, 400),
     GATEWAY_ZUUL_ERROR("GTW005", GTW005, "The gateway ran into a ZuulException that was caught by the ErrorFilter", 500),
+    GATEWAY_API_AUTHORIZATION_HEADER_MISSING("GTW006", GTW006, GTW006, 401),
 
 
     /**
@@ -115,8 +116,9 @@ public enum ObaError {
         public static final String GTW001 = "API token signature is invalid";
         public static final String GTW002 = "Unable to process API token";
         public static final String GTW003 = "API token expired";
-        public static final String GTW004 = "API token expired";
+        public static final String GTW004 = "API token invalid";
         public static final String GTW005 = "Generic gateway error";
+        public static final String GTW006 = "Token header missing";
 
         // Portal
         public static final String PRT003 = "Registration already exists";
@@ -135,6 +137,5 @@ public enum ObaError {
     public String getFormattedLogMessage() {
         return String.format("[ %d | %s | %s | %s ]", getHttpStatus(), getCode(), getClientMessage(), getLogMessage());
     }
-
 
 }
