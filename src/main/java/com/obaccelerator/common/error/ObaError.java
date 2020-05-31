@@ -53,12 +53,14 @@ public enum ObaError {
     /**
      * OBA Gateway errors
      */
-    GATEWAY_API_TOKEN_SIGNATURE_INVALID("GTW001", GTW001, GTW001, 400),
-    GATEWAY_API_TOKEN_PROCESSING_ERROR("GTW002", GTW002, GTW002, 400),
-    GATEWAY_API_TOKEN_EXPIRED("GTW003", GTW003, GTW003, 400),
-    GATEWAY_API_TOKEN_INVALID("GTW004", GTW004, GTW004, 400),
-    GATEWAY_ZUUL_ERROR("GTW005", GTW005, "The gateway ran into a ZuulException that was caught by the ErrorFilter", 500),
-    GATEWAY_API_AUTHORIZATION_HEADER_MISSING("GTW006", GTW006, GTW006, 401),
+
+    GATEWAY_API_TOKEN_SIGNATURE_INVALID("GTW001", GTW001, GTW001, 401),
+    GATEWAY_API_TOKEN_MISSING_OR_INVALID_CLAIMS("GTW002", GTW002, GTW002, 401),
+    GATEWAY_API_TOKEN_EXPIRED("GTW003", GTW003, GTW003, 401),
+    GATEWAY_API_TOKEN_PROCESSING_FAILED("GTW004", GTW004, GTW004, 401),
+    GATEWAY_AUTHORIZATION_HEADER_MISSING("GTW005", GTW005, GTW005, 401),
+    GATEWAY_NOT_FOUND("GTW006", GTW006, GTW006, 404),
+    GATEWAY_TECHNICAL_ERROR("GTW007", GTW007, GTW007, 500),
 
 
     /**
@@ -113,12 +115,13 @@ public enum ObaError {
         public static final String CRT001 = "Certificates limit reached";
 
         // Gateway
-        public static final String GTW001 = "API token signature is invalid";
-        public static final String GTW002 = "Unable to process API token";
-        public static final String GTW003 = "API token expired";
-        public static final String GTW004 = "API token invalid";
-        public static final String GTW005 = "Generic gateway error";
-        public static final String GTW006 = "Token header missing";
+        public static final String GTW001 = "API token signature invalid";
+        public static final String GTW002 = "API token has missing or invalid claims";
+        public static final String GTW003 = "API token is expired";
+        public static final String GTW004 = "API token processing failed";
+        public static final String GTW005 = "Token header missing";
+        public static final String GTW006 = "Not found";
+        public static final String GTW007 = "Technical error";
 
         // Portal
         public static final String PRT003 = "Registration already exists";
@@ -138,4 +141,13 @@ public enum ObaError {
         return String.format("[ %d | %s | %s | %s ]", getHttpStatus(), getCode(), getClientMessage(), getLogMessage());
     }
 
+    public static boolean isCustomObaError(String code) {
+        for (ObaError value : values()) {
+            if (value.getCode().equals(code)) {
+                return true;
+            }
+
+        }
+        return false;
+    }
 }

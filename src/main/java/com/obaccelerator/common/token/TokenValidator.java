@@ -1,9 +1,15 @@
 package com.obaccelerator.common.token;
 
+import com.obaccelerator.common.uuid.UUIDParser;
+import org.springframework.http.HttpStatus;
+
+import javax.servlet.http.HttpServletRequest;
 import java.security.PublicKey;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
+import static com.obaccelerator.common.ObaConstant.APPLICATION_ID_CLAIM;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -14,56 +20,61 @@ public class TokenValidator {
     private TokenValidator() {
     }
 
-    private static final String TOKEN_INVALID_MESSAGE_CLAIMS = "API token invalid: wrong number of claims";
-    private static final String TOKEN_INVALID_MESSAGE_UUID = "API token invalid: cannot parse client UUID. API tokens";
-    private static final String TOKEN_INVALID_SIGNATURE = "API token has an invalid signature";
-    private static final String TOKEN_EXPIRED_MESSAGE = "API token expired";
-    private static final String TOKEN_PROCESSING_EXCEPTION_MESSAGE = "Could not process token";
+    public static void validateToken(final HttpServletRequest request, final PublicKey publicKey) throws ApiTokenProcessingException,
+            ApiTokenMissingOrInvalidClaimsException, ApiTokenExpiredException, ApiTokenInvalidSignatureException, ApiTokenMissingException {
 
-    public static void validateToken(final String token, final PublicKey publicKey) throws ApiTokenValidationException {
+
+        Optional<String> tokenOptional = TokenReader.getTokenFromHeader(request);
+        if (tokenOptional.isEmpty()) {
+            throw new ApiTokenMissingException();
+        }
+
+        validateToken(tokenOptional.get(), publicKey);
+    }
+
+
+    public static void validateToken(final String token, final PublicKey publicKey) throws ApiTokenProcessingException,
+            ApiTokenMissingOrInvalidClaimsException, ApiTokenExpiredException, ApiTokenInvalidSignatureException {
 
         verifySignature(token, publicKey);
 
         Map<String, Object> claims = null;
-        try {
-            claims = TokenReader.readClaims(token, publicKey);
-        } catch (ApiTokenProcessingException e) {
-            throw new ApiTokenValidationException(TOKEN_PROCESSING_EXCEPTION_MESSAGE);
-        }
+
+        claims = TokenReader.readClaims(token, publicKey);
 
         // Are all expected fields present?
         Object iat = claims.get("iat");
-        Object clientId = claims.get("client_id");
+        String applicationId = (String) claims.get(APPLICATION_ID_CLAIM);
         Object jti = claims.get("jti");
         Object exp = claims.get("exp");
         Object role = claims.get("role");
+        boolean invalidApplicationId = false;
 
-        if (claims.size() != 5 || iat == null || isBlank((String) clientId) || isBlank((String) jti)||
-                exp == null || isBlank((String) role)) {
-            throw new ApiTokenValidationException(TOKEN_INVALID_MESSAGE_CLAIMS);
+        try {
+            UUIDParser.fromString(applicationId);
+        } catch (RuntimeException e) {
+            invalidApplicationId = true;
         }
 
-        // Is the client_id a real UUID?
-        try {
-            UUID.fromString((String) clientId);
-        } catch (RuntimeException e) {
-            throw new ApiTokenValidationException(TOKEN_INVALID_MESSAGE_UUID);
+        if (claims.size() != 5 || iat == null || isBlank(applicationId) || isBlank((String) jti) ||
+                exp == null || isBlank((String) role) || invalidApplicationId) {
+            throw new ApiTokenMissingOrInvalidClaimsException();
         }
 
         // Is the token expired?
         long expTime = (long) exp;
         if (expTime < System.currentTimeMillis()) {
-            throw new ApiTokenValidationException(TOKEN_EXPIRED_MESSAGE);
+            throw new ApiTokenExpiredException();
         }
     }
 
-    private static void verifySignature(String token, PublicKey publicKey) throws ApiTokenValidationException {
+    private static void verifySignature(String token, PublicKey publicKey) throws ApiTokenInvalidSignatureException, ApiTokenProcessingException {
         try {
             TokenReader.verifySignature(token, publicKey);
         } catch (ApiTokenSignatureValidationException e) {
-            throw new ApiTokenValidationException(TOKEN_INVALID_SIGNATURE);
+            throw new ApiTokenInvalidSignatureException();
         } catch (ApiTokenProcessingException e) {
-            throw new ApiTokenValidationException(TOKEN_PROCESSING_EXCEPTION_MESSAGE);
+            throw new ApiTokenProcessingException();
         }
     }
 }
