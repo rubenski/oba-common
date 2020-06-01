@@ -104,7 +104,7 @@ public enum ObaError {
         public static final String TKN002 = "KID header missing in jws request";
         public static final String TKN003 = "Client id claim is missing from jws request";
         public static final String TKN004 = "KID sent in token kid header does not exist";
-        public static final String TKN005 = "Authentication token signature is invalid";
+        public static final String TKN005 = "Authentication token signature validation failed";
         public static final String TKN006 = "The client id provided in the authentication token does not exist";
         public static final String TKN007 = "Unable to process authentication token";
         public static final String TKN008 = "Invalid 'role' claim";
