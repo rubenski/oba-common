@@ -31,7 +31,7 @@ public class ExceptionHandlingFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Throwable e) {
             ObaErrorMessage errorMessage = new ObaErrorMessage(OBA_FILTER_ERROR);
-            log.error("Error in filter chain", e);
+            log.error("ERROR IN FILTER CHAIN", e);
             response.setStatus(500);
             response.setContentType("application/json");
             response.getWriter().write(convertObjectToJson(errorMessage));
