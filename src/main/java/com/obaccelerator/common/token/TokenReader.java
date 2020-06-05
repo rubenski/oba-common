@@ -10,6 +10,7 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.jwt.consumer.JwtContext;
 import org.jose4j.jwx.JsonWebStructure;
 import org.jose4j.lang.JoseException;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.PublicKey;
@@ -32,10 +33,15 @@ public class TokenReader {
 
 
     public static Optional<String> getTokenFromHeader(HttpServletRequest request) {
+        return getTokenFromHeader(request.getHeader("Authorization"));
+    }
 
-        String authorization = request.getHeader("Authorization");
+    public static Optional<String> getTokenFromHeader(WebRequest request) {
+        return getTokenFromHeader(request.getHeader("Authorization"));
+    }
 
-        if(authorization == null || authorization.length() == 0) {
+    private static Optional<String> getTokenFromHeader(String authorization) {
+        if (authorization == null || authorization.length() == 0) {
             return Optional.empty();
         }
 
@@ -118,7 +124,7 @@ public class TokenReader {
 
     public static void verifySignature(final String token, final PublicKey publicKey) throws ApiTokenProcessingException, ApiTokenSignatureValidationException {
         JsonWebSignature jws = new JsonWebSignature();
-        jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, AlgorithmIdentifiers.RSA_USING_SHA512));
+        jws.setAlgorithmConstraints(new AlgorithmConstraints(AlgorithmConstraints.ConstraintType.WHITELIST, AlgorithmIdentifiers.RSA_USING_SHA256));
         try {
             jws.setCompactSerialization(token);
             jws.setKey(publicKey);

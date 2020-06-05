@@ -6,14 +6,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Getter
 public enum OpenEndpoint {
 
-    GET_TOKENS(RequestMethod.GET.name(), Path.GET_TOKENS);
+    GET_TOKENS(RequestMethod.GET.name(), "/tokens"),
+    POST_ORGANIZATIONS(RequestMethod.POST.name(), "/organizations"),
+    POST_SESSIONS(RequestMethod.POST.name(), "/sessions");
 
     private static final Map<String, Pattern> CACHE = new HashMap<>();
     private final String method;
@@ -22,10 +23,6 @@ public enum OpenEndpoint {
     OpenEndpoint(String method, String path) {
         this.method = method;
         this.path = path;
-    }
-
-    public static class Path {
-        public static final String GET_TOKENS = "/tokens";
     }
 
     public static boolean isOpenEndpoint(HttpServletRequest request)  {

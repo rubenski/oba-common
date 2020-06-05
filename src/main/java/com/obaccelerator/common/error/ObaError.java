@@ -49,6 +49,7 @@ public enum ObaError {
     OBA_MISSING_AUTHORIZATION_HEADER_ERROR("OBA010", OBA010, OBA010, 400),
     OBA_FILTER_ERROR("OBA011", OBA011, "An exception occurred in a filter", 500),
     OBA_ACCESS_DENIED("OBA012", OBA012, OBA012, 403),
+    OBA_REQUEST_METHOD_NOT_SUPPORTED("OBA13", OBA013, OBA013, 405),
 
     /**
      * OBA Gateway errors
@@ -87,6 +88,7 @@ public enum ObaError {
         public static final String OBA010 = "Authorization header is missing";
         public static final String OBA011 = "Technical error";
         public static final String OBA012 = "Access denied";
+        public static final String OBA013 = "Request method not supported";
 
         // Application
         public static final String APP001 = "Application id in token and uri do not match";

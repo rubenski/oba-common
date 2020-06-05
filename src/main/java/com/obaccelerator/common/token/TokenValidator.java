@@ -10,7 +10,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.obaccelerator.common.ObaConstant.APPLICATION_ID_CLAIM;
+import static com.obaccelerator.common.ObaConstant.ORGANIZATION_ID_CLAIM;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Validates API tokens that OBA created and provided to the client
@@ -45,19 +47,22 @@ public class TokenValidator {
         // Are all expected fields present?
         Object iat = claims.get("iat");
         String applicationId = (String) claims.get(APPLICATION_ID_CLAIM);
+        String organizationId = (String) claims.get(ORGANIZATION_ID_CLAIM);
         Object jti = claims.get("jti");
         Object exp = claims.get("exp");
         Object role = claims.get("role");
-        boolean invalidApplicationId = false;
 
-        try {
-            UUIDParser.fromString(applicationId);
-        } catch (RuntimeException e) {
-            invalidApplicationId = true;
+        // Checking if provided ids are valid UUIDs.
+        if (isNotBlank(applicationId)) {
+            UUIDParser.fromString(organizationId);
         }
 
-        if (claims.size() != 5 || iat == null || isBlank(applicationId) || isBlank((String) jti) ||
-                exp == null || isBlank((String) role) || invalidApplicationId) {
+        if(isNotBlank(organizationId)) {
+            UUIDParser.fromString(organizationId);
+        }
+
+        if (claims.size() != 5 || iat == null || (isBlank(applicationId) && isBlank(organizationId)) || isBlank((String) jti) ||
+                exp == null || isBlank((String) role)) {
             throw new ApiTokenMissingOrInvalidClaimsException();
         }
 

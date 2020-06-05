@@ -11,6 +11,7 @@ import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -106,6 +107,13 @@ public abstract class ObaBaseExceptionHandler {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_MISSING_AUTHORIZATION_HEADER_ERROR);
         return handleAsError(errorMessage, e);
     }
+
+    @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ObaErrorMessage> handleMissingRequestHeaderException(HttpRequestMethodNotSupportedException e, WebRequest webRequest) {
+        ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_REQUEST_METHOD_NOT_SUPPORTED);
+        return handleAsError(errorMessage, e);
+    }
+
 
     protected ResponseEntity<ObaErrorMessage> handleAsError(ObaErrorMessage errorMessage, Throwable e) {
         log.error(ERROR_PREFIX, e);

@@ -13,15 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.obaccelerator.common.ObaConstant.APPLICATION_ID_CLAIM;
-import static com.obaccelerator.common.ObaConstant.ROLE_CLAIM;
+import static com.obaccelerator.common.ObaConstant.*;
 
 @Slf4j
 public class TokenGenerator {
 
     private static final long TEMP_TOKEN_VALIDITY_MS = 24 * 60 * 60 * 1000;
 
-    private static final String ALGORITHM = AlgorithmIdentifiers.RSA_USING_SHA512;
+    private static final String ALGORITHM = AlgorithmIdentifiers.RSA_USING_SHA256;
     private static final long INTERNAL_TOKEN_VALIDITY_MS = 10 * 1000;
     private static final long API_TOKEN_VALIDITY_MS = 10 * 60 * 1000;
 
@@ -40,11 +39,20 @@ public class TokenGenerator {
                 Collections.emptyMap());
     }
 
-    public String generateInternalToken(String applicationId, String internalClientRoleName) {
+    public String generateApplicationToken(String applicationId) {
         return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(APPLICATION_ID_CLAIM, applicationId);
-                    put(ROLE_CLAIM, internalClientRoleName);
+                    put(ROLE_CLAIM, ROLE_APPLICATION);
+                }},
+                Collections.emptyMap());
+    }
+
+    public String generateOrganizationToken(String organizationId) {
+        return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
+                new HashMap<String, String>() {{
+                    put(ORGANIZATION_ID_CLAIM, organizationId);
+                    put(ROLE_CLAIM, ROLE_PORTAL_ORGANIZATION);
                 }},
                 Collections.emptyMap());
     }

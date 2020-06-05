@@ -7,5 +7,6 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.PARAMETER, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ApplicationRequestContext {
+public @interface OrgId {
 }
+
