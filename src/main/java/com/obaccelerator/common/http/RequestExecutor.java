@@ -86,7 +86,6 @@ public class RequestExecutor<I, O> {
                         }
                         throw e;
                     }
-
                 }
 
                 String responseBodyAsString = getResponseBodyAsString(response);
@@ -95,6 +94,9 @@ public class RequestExecutor<I, O> {
                 //  performance will be achieved if we don't convert to String first, that is, use Jackon JsonParser,
                 //  but it is tedious work
                 try {
+                    if(Void.class.equals(targetClass)) {
+                        return null;
+                    }
                     return MAPPER.readValue(responseBodyAsString, targetClass);
                 } catch (Exception e) {
                     throw new ResponseMappingException("Could not map response from " + request.getURI() + (logRequestResponsesOnError ? " : " + responseBodyAsString : ""), e);
