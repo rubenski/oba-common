@@ -62,6 +62,7 @@ public enum ObaError {
     GATEWAY_AUTHORIZATION_HEADER_MISSING("GTW005", GTW005, GTW005, 401),
     GATEWAY_NOT_FOUND("GTW006", GTW006, GTW006, 404),
     GATEWAY_TECHNICAL_ERROR("GTW007", GTW007, GTW007, 500),
+    GATEWAY_API_TOKEN_INVALID_ROLE_CLAIM("GTW008", GTW008, GTW008, 403),
 
 
     /**
@@ -123,6 +124,7 @@ public enum ObaError {
         public static final String GTW005 = "Token header missing";
         public static final String GTW006 = "Not found";
         public static final String GTW007 = "Technical error";
+        public static final String GTW008 = "API token has an invalid role claim";
 
         // Portal
         public static final String PRT003 = "Registration already exists";

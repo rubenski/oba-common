@@ -43,7 +43,7 @@ public class TokenGenerator {
         return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(APPLICATION_ID_CLAIM, applicationId);
-                    put(ROLE_CLAIM, ROLE_APPLICATION);
+                    put(ROLE_CLAIM, APPLICATION);
                 }},
                 Collections.emptyMap());
     }
@@ -52,7 +52,7 @@ public class TokenGenerator {
         return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(ORGANIZATION_ID_CLAIM, organizationId);
-                    put(ROLE_CLAIM, ROLE_PORTAL_ORGANIZATION);
+                    put(ROLE_CLAIM, ORGANIZATION);
                 }},
                 Collections.emptyMap());
     }

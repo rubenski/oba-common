@@ -6,10 +6,14 @@ public class ObaConstant {
     public static final String APPLICATION_ID_CLAIM = "application-id";
     public static final String ORGANIZATION_ID_CLAIM = "organization-id";
 
-    public static final String ROLE_APPLICATION = "application";
-    public static final String ROLE_PORTAL_ADMIN = "portal_admin";
-    public static final String ROLE_PORTAL_ORGANIZATION = "portal_organization";
-    public static final String ROLE_OBA_ANONYMOUS = "abo_anonymous";
+    /**
+     * Using the ROLE_ prefix here to satisfy Spring's RoleVoter. This voter appears in the DecisionManager of
+     * MethodSecurityInterceptor when enabling @Secured annotations.
+     */
+    public static final String APPLICATION = "ROLE_APPLICATION";
+    public static final String ADMIN = "ROLE_ADMIN";
+    public static final String ORGANIZATION = "ROLE_ORGANIZATION";
+    public static final String ANONYMOUS = "ROLE_OBA_ANONYMOUS";
 
 
 }

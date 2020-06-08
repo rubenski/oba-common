@@ -22,8 +22,8 @@ public class TokenValidator {
     private TokenValidator() {
     }
 
-    public static void validateToken(final HttpServletRequest request, final PublicKey publicKey) throws ApiTokenProcessingException,
-            ApiTokenMissingOrInvalidClaimsException, ApiTokenExpiredException, ApiTokenInvalidSignatureException, ApiTokenMissingException {
+    public static void validateToken(final HttpServletRequest request, final PublicKey publicKey, String expectedRoleClaim) throws ApiTokenProcessingException,
+            ApiTokenMissingOrInvalidClaimsException, ApiTokenExpiredException, ApiTokenInvalidSignatureException, ApiTokenMissingException, ApiTokenInvalidRoleClaimException {
 
 
         Optional<String> tokenOptional = TokenReader.getTokenFromHeader(request);
@@ -31,12 +31,12 @@ public class TokenValidator {
             throw new ApiTokenMissingException();
         }
 
-        validateToken(tokenOptional.get(), publicKey);
+        validateToken(tokenOptional.get(), publicKey, expectedRoleClaim);
     }
 
 
-    public static void validateToken(final String token, final PublicKey publicKey) throws ApiTokenProcessingException,
-            ApiTokenMissingOrInvalidClaimsException, ApiTokenExpiredException, ApiTokenInvalidSignatureException {
+    public static void validateToken(final String token, final PublicKey publicKey, String expectedRoleClaim) throws ApiTokenProcessingException,
+            ApiTokenMissingOrInvalidClaimsException, ApiTokenExpiredException, ApiTokenInvalidSignatureException, ApiTokenInvalidRoleClaimException {
 
         verifySignature(token, publicKey);
 
@@ -54,15 +54,19 @@ public class TokenValidator {
 
         // Checking if provided ids are valid UUIDs.
         if (isNotBlank(applicationId)) {
+            UUIDParser.fromString(applicationId);
+        }
+
+        if (isNotBlank(organizationId)) {
             UUIDParser.fromString(organizationId);
         }
 
-        if(isNotBlank(organizationId)) {
-            UUIDParser.fromString(organizationId);
+        if (!expectedRoleClaim.equals((String) role)) {
+            throw new ApiTokenInvalidRoleClaimException();
         }
 
         if (claims.size() != 5 || iat == null || (isBlank(applicationId) && isBlank(organizationId)) || isBlank((String) jti) ||
-                exp == null || isBlank((String) role)) {
+                exp == null) {
             throw new ApiTokenMissingOrInvalidClaimsException();
         }
 
