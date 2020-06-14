@@ -5,7 +5,8 @@ import lombok.Value;
 @Value
 public class HiddenField extends FieldDefinition {
 
-    private String value;
+    LabelExplanation labelExplanation;
+    String value;
 
     @Override
     public FieldType getType() {

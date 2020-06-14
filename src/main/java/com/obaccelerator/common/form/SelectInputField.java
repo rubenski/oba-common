@@ -7,9 +7,9 @@ import java.util.Map;
 @Value
 public class SelectInputField extends FieldDefinition {
 
-    private LabelExplanation labelExplanation;
-    private boolean required;
-    private Map<String, String> options;
+    LabelExplanation labelExplanation;
+    boolean required;
+    Map<String, String> options;
 
     @Override
     public FieldType getType() {

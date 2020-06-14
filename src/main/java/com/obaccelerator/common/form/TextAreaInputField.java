@@ -5,11 +5,13 @@ import lombok.Value;
 @Value
 public class TextAreaInputField extends FieldDefinition {
 
-    private LabelExplanation labelExplanation;
-    private String regex;
-    private int minLength;
-    private int maxLength;
-    private boolean required;
+    LabelExplanation labelExplanation;
+    String regex;
+    int minLength;
+    int maxLength;
+    boolean required;
+
+
 
     @Override
     public FieldType getType() {

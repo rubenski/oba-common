@@ -99,7 +99,7 @@ public class RequestExecutor<I, O> {
                     }
                     return MAPPER.readValue(responseBodyAsString, targetClass);
                 } catch (Exception e) {
-                    throw new ResponseMappingException("Could not map response from " + request.getURI() + (logRequestResponsesOnError ? " : " + responseBodyAsString : ""), e);
+                    throw new ResponseMappingException("Could not map response from " + request.getURI() + (logRequestResponsesOnError ? " body : ~ " + responseBodyAsString + " ~" : ""), e);
                 }
 
             });

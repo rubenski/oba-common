@@ -5,7 +5,8 @@ import lombok.Value;
 @Value
 public class DescriptionField extends FieldDefinition {
 
-    private String description;
+    LabelExplanation labelExplanation;
+    String description;
 
     @Override
     FieldType getType() {

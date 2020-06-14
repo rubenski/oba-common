@@ -8,7 +8,7 @@ import java.util.List;
 public class FormDefinition {
     private String title;
     private String explanation;
-    private List<FieldLayoutGroup> fieldLayoutGroups;
+    private final List<FieldLayoutGroup> fieldLayoutGroups;
 
     public FormDefinition(String title, String explanation, List<FieldLayoutGroup> fieldLayoutGroups) {
         this.title = title;

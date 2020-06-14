@@ -1,14 +1,13 @@
 package com.obaccelerator.common.form;
 
 
+import lombok.Value;
 
+@Value
 public class ButtonField extends FieldDefinition {
 
-    private String buttonText;
-
-    public ButtonField(String buttonText) {
-        this.buttonText = buttonText;
-    }
+    LabelExplanation labelExplanation;
+    String buttonText;
 
     @Override
     public FieldType getType() {
