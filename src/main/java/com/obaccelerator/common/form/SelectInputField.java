@@ -1,6 +1,7 @@
 package com.obaccelerator.common.form;
 
 import lombok.Getter;
+import lombok.Value;
 
 import java.util.List;
 
@@ -16,9 +17,10 @@ public class SelectInputField extends FieldDefinition {
         this.required = required;
     }
 
+    @Value
     public static class SelectListOption {
-        private String value;
-        private String label;
+        String value;
+        String label;
     }
 
     public FieldType getType() {
