@@ -16,7 +16,7 @@ public class SelectInputField extends FieldDefinition {
         this.required = required;
     }
 
-    private static class SelectListOption {
+    public static class SelectListOption {
         private String value;
         private String label;
     }
