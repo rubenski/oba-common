@@ -1,14 +1,17 @@
 package com.obaccelerator.common.form;
 
-import lombok.Value;
+import lombok.Getter;
 
-@Value
+@Getter
 public class HiddenField extends FieldDefinition {
 
-    LabelExplanation labelExplanation;
-    String value;
+    private final String value;
 
-    @Override
+    public HiddenField(String key, LabelExplanation labelExplanation, String value) {
+        super(key, labelExplanation);
+        this.value = value;
+    }
+
     public FieldType getType() {
         return FieldType.HIDDEN;
     }

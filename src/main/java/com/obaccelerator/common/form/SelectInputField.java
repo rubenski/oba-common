@@ -1,17 +1,21 @@
 package com.obaccelerator.common.form;
 
-import lombok.Value;
+import lombok.Getter;
 
 import java.util.Map;
 
-@Value
+@Getter
 public class SelectInputField extends FieldDefinition {
 
-    LabelExplanation labelExplanation;
-    boolean required;
-    Map<String, String> options;
+    private final Map<String, String> options;
+    private final boolean required;
 
-    @Override
+    public SelectInputField(String key, LabelExplanation labelExplanation, Map<String, String> options, boolean required) {
+        super(key, labelExplanation);
+        this.options = options;
+        this.required = required;
+    }
+
     public FieldType getType() {
         return FieldType.SELECT_LIST;
     }

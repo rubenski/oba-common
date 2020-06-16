@@ -1,14 +1,17 @@
 package com.obaccelerator.common.form;
 
-import lombok.Value;
+import lombok.Getter;
 
-@Value
+@Getter
 public class DescriptionField extends FieldDefinition {
 
-    LabelExplanation labelExplanation;
-    String description;
+    private final String description;
 
-    @Override
+    public DescriptionField(String key, LabelExplanation labelExplanation, String description) {
+        super(key, labelExplanation);
+        this.description = description;
+    }
+
     FieldType getType() {
         return FieldType.DESCRIPTION;
     }

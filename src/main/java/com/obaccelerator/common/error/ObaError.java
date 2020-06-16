@@ -36,6 +36,9 @@ public enum ObaError {
     // Tokens
     CERTIFICATE_LIMIT_REACHED("CRT001", CRT001, CRT001, 403),
 
+    // Api
+    OBA_NO_API_FOR_BANK("API001", "No API for bank", "No API was registered in the Spring context for this bank", 500),
+
     // OBA Generic
     OBA_TECHNICAL_ERROR("OBA001", TECHNICAL_ERROR, TECHNICAL_ERROR, 500),
     OBA_DB_EXCEPTION("OBA002", TECHNICAL_ERROR, "Data access or SQL exception", 500),
@@ -54,7 +57,6 @@ public enum ObaError {
     /**
      * OBA Gateway errors
      */
-
     GATEWAY_API_TOKEN_SIGNATURE_INVALID("GTW001", GTW001, GTW001, 401),
     GATEWAY_API_TOKEN_MISSING_OR_INVALID_CLAIMS("GTW002", GTW002, GTW002, 401),
     GATEWAY_API_TOKEN_EXPIRED("GTW003", GTW003, GTW003, 401),

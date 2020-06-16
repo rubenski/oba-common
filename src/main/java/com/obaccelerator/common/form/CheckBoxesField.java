@@ -1,22 +1,28 @@
 package com.obaccelerator.common.form;
 
-import lombok.Value;
+import lombok.*;
 
 import java.util.Map;
 
-@Value
+@Getter
 public class CheckBoxesField extends FieldDefinition {
 
-    LabelExplanation labelExplanation;
-    Map<String, String> values;
+    private final Map<String, CheckBoxValue> values;
+    private final boolean required;
 
-    @Override
+    public CheckBoxesField(String key, LabelExplanation labelExplanation, Map<String, CheckBoxValue> values, boolean required) {
+        super(key, labelExplanation);
+        this.values = values;
+        this.required = required;
+    }
+
     FieldType getType() {
         return FieldType.CHECKBOXES;
     }
 
-    @Override
-    LabelExplanation getLabelExplanation() {
-        return labelExplanation;
+    @Value
+    public static class CheckBoxValue {
+        String value;
+        boolean selected;
     }
 }

@@ -1,20 +1,24 @@
 package com.obaccelerator.common.form;
 
-import lombok.Value;
+import lombok.Getter;
 
-@Value
+@Getter
 public class TextAreaInputField extends FieldDefinition {
 
-    LabelExplanation labelExplanation;
-    String regex;
-    int minLength;
-    int maxLength;
-    boolean required;
+    private final String regex;
+    private final int minLength;
+    private final int maxLength;
+    private final boolean required;
 
+    public TextAreaInputField(String key, LabelExplanation labelExplanation, String regex, int minLength, int maxLength, boolean required) {
+        super(key, labelExplanation);
+        this.regex = regex;
+        this.minLength = minLength;
+        this.maxLength = maxLength;
+        this.required = required;
+    }
 
-
-    @Override
-    public FieldType getType() {
+    FieldType getType() {
         return FieldType.TEXT_AREA;
     }
 }
