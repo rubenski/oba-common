@@ -1,16 +1,17 @@
 package com.obaccelerator.common.form;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Value;
 
-import java.util.Map;
+import java.util.List;
 
 @Getter
 public class CheckBoxesField extends FieldDefinition {
 
-    private final Map<String, CheckBoxValue> values;
+    private final List<CheckBoxValue> values;
     private final boolean required;
 
-    public CheckBoxesField(String key, LabelExplanation labelExplanation, Map<String, CheckBoxValue> values, boolean required) {
+    public CheckBoxesField(String key, LabelExplanation labelExplanation, List<CheckBoxValue> values, boolean required) {
         super(key, labelExplanation);
         this.values = values;
         this.required = required;
@@ -22,6 +23,7 @@ public class CheckBoxesField extends FieldDefinition {
 
     @Value
     public static class CheckBoxValue {
+        String label;
         String value;
         boolean selected;
     }
