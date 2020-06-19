@@ -8,11 +8,11 @@ public abstract class FieldDefinition {
     protected String value;
     protected String key;
     protected LabelExplanation labelExplanation;
-    protected FieldType fieldType;
+    protected FieldType type;
 
-    public FieldDefinition(String key, LabelExplanation labelExplanation, FieldType fieldType) {
+    public FieldDefinition(String key, LabelExplanation labelExplanation, FieldType type) {
         this.key = key;
         this.labelExplanation = labelExplanation;
-        this.fieldType = fieldType;
+        this.type = type;
     }
 }
