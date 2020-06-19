@@ -12,13 +12,9 @@ public class CheckBoxesField extends FieldDefinition {
     private final boolean required;
 
     public CheckBoxesField(String key, LabelExplanation labelExplanation, List<CheckBoxValue> values, boolean required) {
-        super(key, labelExplanation);
+        super(key, labelExplanation, FieldType.CHECKBOXES);
         this.values = values;
         this.required = required;
-    }
-
-    FieldType getType() {
-        return FieldType.CHECKBOXES;
     }
 
     @Value

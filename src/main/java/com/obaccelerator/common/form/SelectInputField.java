@@ -12,7 +12,7 @@ public class SelectInputField extends FieldDefinition {
     private final boolean required;
 
     public SelectInputField(String key, LabelExplanation labelExplanation, List<SelectListOption> options, boolean required) {
-        super(key, labelExplanation);
+        super(key, labelExplanation, FieldType.SELECT);
         this.options = options;
         this.required = required;
     }
@@ -21,9 +21,5 @@ public class SelectInputField extends FieldDefinition {
     public static class SelectListOption {
         String value;
         String label;
-    }
-
-    public FieldType getType() {
-        return FieldType.SELECT_LIST;
     }
 }

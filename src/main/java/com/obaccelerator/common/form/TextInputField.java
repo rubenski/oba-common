@@ -11,15 +11,11 @@ public class TextInputField extends FieldDefinition {
     private final boolean required;
 
     public TextInputField(String key, LabelExplanation labelExplanation, String regex, int minLength, int maxLength, boolean required) {
-        super(key, labelExplanation);
+        super(key, labelExplanation, FieldType.TEXT);
         this.regex = regex;
         this.minLength = minLength;
         this.maxLength = maxLength;
         this.required = required;
-    }
-
-    public FieldType getType() {
-        return FieldType.TEXT;
     }
 
     public static TextInputField getClientSecretField() {

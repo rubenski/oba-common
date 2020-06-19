@@ -8,11 +8,8 @@ public class DescriptionField extends FieldDefinition {
     private final String description;
 
     public DescriptionField(String key, LabelExplanation labelExplanation, String description) {
-        super(key, labelExplanation);
+        super(key, labelExplanation, FieldType.DESCRIPTION);
         this.description = description;
     }
 
-    FieldType getType() {
-        return FieldType.DESCRIPTION;
-    }
 }
