@@ -17,4 +17,11 @@ public class TextAreaInputField extends FieldDefinition {
         this.maxLength = maxLength;
         this.required = required;
     }
+
+    @Override
+    void validate() {
+        if(!values.isEmpty() && values.get(0).length() < minLength) {
+            throw new ApiRegistrationFormValidationException(key);
+        }
+    }
 }

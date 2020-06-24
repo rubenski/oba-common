@@ -35,4 +35,13 @@ public class CheckBoxesField extends FieldDefinition {
         int minSelected;
         String message;
     }
+
+    @Override
+    void validate() {
+        if (checkBoxesMinSelectedValidator != null) {
+            if (values == null || values.isEmpty() || values.size() < checkBoxesMinSelectedValidator.minSelected) {
+                fail();
+            }
+        }
+    }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class SubmittedForm {
-    private int stepNr;
-    private List<SubmittedValue> values;
+public class SubmittedValue {
+    private String key;
+    private List<String> values;
 }

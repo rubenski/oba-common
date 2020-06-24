@@ -12,4 +12,9 @@ public class DescriptionField extends FieldDefinition {
         this.description = description;
     }
 
+
+    @Override
+    void validate() {
+
+    }
 }

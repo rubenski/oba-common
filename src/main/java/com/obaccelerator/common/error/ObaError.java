@@ -33,8 +33,11 @@ public enum ObaError {
     TOKEN_ELEVATED_AUTHENTICATION_TOKEN_INVALID_ROLE_CLAIM("TKN008", TKN008, TKN008, 400),
     TOKEN_EMPTY("TKN009", TKN009, TKN009, 400),
 
-    // Tokens
+    // Certificates
     CERTIFICATE_LIMIT_REACHED("CRT001", CRT001, CRT001, 403),
+
+    // Api Registration
+    API_REGISTRATION_FORM_INVALID("REG001", REG001, REG001, 400),
 
     // Api
     OBA_NO_API_FOR_BANK("API001", "No API for bank", "No API was registered in the Spring context for this bank", 500),
@@ -117,6 +120,9 @@ public enum ObaError {
 
         // Certificates
         public static final String CRT001 = "Certificates limit reached";
+
+        // API registration
+        public static final String REG001 = "API registration form validation failed";
 
         // Gateway
         public static final String GTW001 = "API token signature invalid";

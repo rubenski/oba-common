@@ -5,6 +5,8 @@ import lombok.Value;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Getter
 public class SelectInputField extends FieldDefinition {
 
@@ -21,5 +23,14 @@ public class SelectInputField extends FieldDefinition {
     public static class SelectListOption {
         String value;
         String label;
+    }
+
+    @Override
+    void validate() {
+        if (required) {
+            if (values == null || values.isEmpty()) {
+                fail();
+            }
+        }
     }
 }

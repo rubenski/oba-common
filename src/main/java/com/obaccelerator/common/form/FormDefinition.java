@@ -3,7 +3,9 @@ package com.obaccelerator.common.form;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.stream.Stream;
 
 @NoArgsConstructor
 @Getter
@@ -25,5 +27,17 @@ public class FormDefinition {
 
     public FormDefinition(List<FieldLayoutGroup> fieldLayoutGroups) {
         this.fieldLayoutGroups = fieldLayoutGroups;
+    }
+
+    public void applySubmittedForm(SubmittedForm submittedForm) {
+        fieldLayoutGroups.stream()
+                .flatMap(flg -> flg.getFields().stream())
+                .filter(f -> submittedForm.getValues().stream()
+                        .filter(sv -> f.key.equals(sv.getKey())).findAny()
+                        .map(sv -> {
+                            f.setValue(sv.getValues());
+                            return true;
+                        })
+                        .orElseThrow(() -> new FieldNotSubmittedException(f.key)));
     }
 }
