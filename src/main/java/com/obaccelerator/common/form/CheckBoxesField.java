@@ -23,6 +23,7 @@ public class CheckBoxesField extends FieldDefinition {
         this.checkBoxesMinSelectedValidator = checkBoxesMinSelectedValidator;
     }
 
+
     @Value
     public static class CheckBoxValue {
         String label;

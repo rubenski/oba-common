@@ -1,7 +1,6 @@
 package com.obaccelerator.common.form;
 
 import lombok.Getter;
-
 import java.util.List;
 
 @Getter
