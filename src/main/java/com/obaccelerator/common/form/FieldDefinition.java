@@ -1,6 +1,7 @@
 package com.obaccelerator.common.form;
 
 import lombok.Getter;
+
 import java.util.List;
 
 @Getter
@@ -26,5 +27,9 @@ public abstract class FieldDefinition {
     void setValue(List<String> values) {
         this.values = values;
         validate();
+    }
+
+    public void setValues(List<String> values) {
+        this.values = values;
     }
 }

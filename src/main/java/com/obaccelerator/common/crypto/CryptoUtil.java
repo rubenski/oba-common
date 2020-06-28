@@ -100,7 +100,8 @@ public class CryptoUtil {
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec);
             // Perform Encryption
             byte[] bytes = cipher.doFinal(plaintext);
-            return new EncryptionResult(iv, bytes);
+            return new EncryptionResult(iv, Base64.getEncoder().encodeToString(iv),
+                    bytes, Base64.getEncoder().encodeToString(bytes));
         } catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
                 | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException e) {
             throw new RuntimeException(e);
@@ -139,6 +140,25 @@ public class CryptoUtil {
         return new String(decryptedText);
     }
 
+    public static String decryptGcm(String base64CipherText, SecretKey key, String base64Iv) throws Exception {
+        // Get Cipher Instance
+        Cipher cipher = Cipher.getInstance(GCM_ALGO);
+
+        // Create SecretKeySpec
+        SecretKeySpec keySpec = new SecretKeySpec(key.getEncoded(), "AES");
+
+        // Create GCMParameterSpec
+        GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, Base64.getDecoder().decode(base64Iv));
+
+        // Initialize Cipher for DECRYPT_MODE
+        cipher.init(Cipher.DECRYPT_MODE, keySpec, gcmParameterSpec);
+
+        // Perform Decryption
+        byte[] decryptedText = cipher.doFinal(Base64.getDecoder().decode(base64CipherText));
+
+        return new String(decryptedText);
+    }
+
     // TODO: refactor : code below always uses an RSA key factory. Fine for now, but if we get non-RSA keys this should be fixed
     public static PrivateKey stringToPrivateKey(String privateKeyString) {
         byte[] plainTextKey = Base64.getDecoder().decode(privateKeyString);
@@ -167,6 +187,8 @@ public class CryptoUtil {
     @Value
     public static class EncryptionResult {
         byte[] iv;
+        String ivBase64;
         byte[] cipherText;
+        String cipherTextBase64;
     }
 }

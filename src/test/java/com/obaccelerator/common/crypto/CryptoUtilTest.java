@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,6 +22,21 @@ class CryptoUtilTest {
         SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
         CryptoUtil.EncryptionResult result = CryptoUtil.encryptGcm(plainText.getBytes(), secretKeySpec);
         String s = CryptoUtil.decryptGcm(result.getCipherText(), secretKeySpec, result.getIv());
+        log.info(new String(result.getIv()));
+        assertEquals("Zomaar wat", s);
+    }
+
+    @Test
+    public void testGcm2() throws Exception {
+        String plainText = "Zomaar wat";
+        byte[] key = "PeShVmYp3s6v9y$B&E)H@McQfTjWnZr4".getBytes();
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+        CryptoUtil.EncryptionResult result = CryptoUtil.encryptGcm(plainText.getBytes(), secretKeySpec);
+
+        String iv = new String(result.getIv(), "ISO-8859-1");
+        byte[] bytes = iv.getBytes("ISO-8859-1");
+
+        String s = CryptoUtil.decryptGcm(result.getCipherText(), secretKeySpec, bytes);
         log.info(new String(result.getIv()));
         assertEquals("Zomaar wat", s);
     }
