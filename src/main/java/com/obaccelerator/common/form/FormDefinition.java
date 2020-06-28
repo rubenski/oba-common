@@ -3,9 +3,7 @@ package com.obaccelerator.common.form;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.stream.Stream;
 
 @NoArgsConstructor
 @Getter
@@ -15,12 +13,27 @@ public class FormDefinition {
     private List<FieldLayoutGroup> fieldLayoutGroups;
 
     public FormDefinition(String title, String explanation, List<FieldLayoutGroup> fieldLayoutGroups) {
+        if(title == null) {
+            throw new IllegalArgumentException("Empty title");
+        }
+
+        if(fieldLayoutGroups == null) {
+            throw new IllegalArgumentException("Empty layout groups");
+        }
         this.title = title;
         this.explanation = explanation;
         this.fieldLayoutGroups = fieldLayoutGroups;
     }
 
     public FormDefinition(String title, List<FieldLayoutGroup> fieldLayoutGroups) {
+
+        if(title == null) {
+            throw new IllegalArgumentException("Empty title");
+        }
+
+        if(fieldLayoutGroups == null) {
+            throw new IllegalArgumentException("Empty layout groups");
+        }
         this.title = title;
         this.fieldLayoutGroups = fieldLayoutGroups;
     }
