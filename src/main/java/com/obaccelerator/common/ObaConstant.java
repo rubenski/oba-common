@@ -16,4 +16,8 @@ public class ObaConstant {
     public static final String ANONYMOUS = "ROLE_OBA_ANONYMOUS";
 
 
+    public static final String SIGNING_CERTIFICATE_KEY = "signing_certificate";
+    public static final String TRANSPORT_CERTIFICATE_KEY = "transport_certificate";
+    public static final String REDIRECT_URLS_KEY = "redirect_urls";
+    public static final String SECRET_VALUE = "***************";
 }

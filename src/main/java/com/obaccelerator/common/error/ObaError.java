@@ -13,11 +13,11 @@ public enum ObaError {
 
     // Application
     APPLICATION_NON_MATCHING_CLIENT_ID_IN_URI_AND_TOKEN("APP001", APP001, APP001, 400),
-    APPLICATION_KEYS_MAX_NUMBER_OF_KEYS_REACHED("APP002", APP002, APP002, 409),
-    APPLICATION_KEYS_KEY_ID_ALREADY_EXISTS("APP003", APP003, APP003, 409),
+    APPLICATION_KEYS_MAX_NUMBER_OF_KEYS_REACHED("APP002", APP002, APP002, 403),
     APPLICATION_KEYS_INVALID_KEY("APP004", APP004, APP004, 400),
     APPLICATION_NOT_ONBOARDED_WITH_BANK("APP005", APP005, APP005, 400),
     APPLICATION_ONBOARDING_DISABLED("APP006", APP006, APP006, 403),
+    APPLICATION_MAX_NR_OF_APPLICATIONS_REACHED("APP007", APP007, APP007, 403),
 
     // User
     USER_CREATION_FAILED("USR001", USR001, USR001, 500),
@@ -103,6 +103,7 @@ public enum ObaError {
         public static final String APP004 = "Public key value is not a valid public key";
         public static final String APP005 = "Application is not onboarded with bank";
         public static final String APP006 = "Bank is disabled";
+        public static final String APP007 = "The maximum number of applications has been reached";
 
         // User
         public static final String USR001 = "User creation failed";

@@ -5,7 +5,8 @@ public enum SecurityEvent {
     NO_AUTHORIZATION_HEADER_ON_INTERNAL_REQUEST("No authorization header on internal request"),
     ENDPOINT_NOT_DEFINED("Endpoint not defined"),
     INTERNAL_TOKEN_VALIDATION_PROBLEM("Internal token validation problem"),
-    INTERNAL_ELEVATED_TOKEN_VALIDATION_PROBLEM("Internal elevated token validation problem");
+    INTERNAL_ELEVATED_TOKEN_VALIDATION_PROBLEM("Internal elevated token validation problem"),
+    OWNERSHIP_CHECK_FAILED("Ownership check failed");
 
     private String description;
 

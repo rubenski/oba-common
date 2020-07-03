@@ -2,6 +2,10 @@ package com.obaccelerator.common.form;
 
 import lombok.Getter;
 
+import java.util.Collections;
+
+import static com.obaccelerator.common.ObaConstant.SECRET_VALUE;
+
 @Getter
 public class TextInputField extends FieldDefinition {
 
@@ -16,10 +20,14 @@ public class TextInputField extends FieldDefinition {
         this.maxLength = maxLength;
         this.required = required;
         this.secret = secret;
+
+        if(secret) {
+            this.values = Collections.singletonList(SECRET_VALUE);
+        }
     }
 
-    public static TextInputField getClientSecretField() {
-        return new TextInputField("client_secret", new LabelExplanation("Client Secret"), 3, 300, true, true);
+    public static TextInputField getClientSecretField(boolean setSecretValue) {
+        return new TextInputField("client_secret", new LabelExplanation("Client Secret"), 3, 300, true, setSecretValue);
     }
 
     public static TextInputField getClientIdField() {
