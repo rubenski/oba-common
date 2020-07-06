@@ -1,5 +1,6 @@
 package com.obaccelerator.common.token;
 
+import com.google.protobuf.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.jose4j.jwa.AlgorithmConstraints;
 import org.jose4j.jws.AlgorithmIdentifiers;
@@ -30,7 +31,7 @@ public class TokenGenerator {
         privateKey = new PfxUtil(pfxPath, pfxPassword).getPrivateKey(privateKeyAlias);
     }
 
-    public String generateApiToken(String applicationId, String externalClientRoleName) {
+    public ApiToken generateApiToken(String applicationId, String externalClientRoleName) {
         return generateToken(API_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(APPLICATION_ID_CLAIM, applicationId);
@@ -39,7 +40,7 @@ public class TokenGenerator {
                 Collections.emptyMap());
     }
 
-    public String generateApplicationToken(String applicationId) {
+    public ApiToken generateApplicationToken(String applicationId) {
         return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(APPLICATION_ID_CLAIM, applicationId);
@@ -48,7 +49,7 @@ public class TokenGenerator {
                 Collections.emptyMap());
     }
 
-    public String generateOrganizationToken(String organizationId) {
+    public ApiToken generateOrganizationToken(String organizationId) {
         return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(ORGANIZATION_ID_CLAIM, organizationId);
@@ -57,7 +58,7 @@ public class TokenGenerator {
                 Collections.emptyMap());
     }
 
-    public String generateToken(String roleName) {
+    public ApiToken generateToken(String roleName) {
         return generateToken(API_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(ROLE_CLAIM, roleName);
@@ -65,7 +66,7 @@ public class TokenGenerator {
                 Collections.emptyMap());
     }
 
-    public String generateInternalElevatedToken(String internalElevatedRoleName) {
+    public ApiToken generateInternalElevatedToken(String internalElevatedRoleName) {
         return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(ROLE_CLAIM, internalElevatedRoleName);
@@ -73,16 +74,18 @@ public class TokenGenerator {
                 Collections.emptyMap());
     }
 
-    public String generateToken(long validityMs, Map<String, String> additionalClaims, Map<String, String> headers) {
+    public ApiToken generateToken(long validityMs, Map<String, String> additionalClaims, Map<String, String> headers) {
         final long millis = System.currentTimeMillis();
+        final long expires = millis + TEMP_TOKEN_VALIDITY_MS;
         JwtClaims jwtClaims = new JwtClaims();
         jwtClaims.setClaim("iat", millis);
-        jwtClaims.setClaim("exp", millis + TEMP_TOKEN_VALIDITY_MS); // valid for 10 minutes
+        jwtClaims.setClaim("exp", expires); // valid for 10 minutes
         jwtClaims.setClaim("jti", UUID.randomUUID());
         for (String s : additionalClaims.keySet()) {
             jwtClaims.setClaim(s, additionalClaims.get(s));
         }
-        return createTokenFromClaims(jwtClaims, headers);
+        String tokenFromClaims = createTokenFromClaims(jwtClaims, headers);
+        return new ApiToken(tokenFromClaims, expires);
     }
 
     private String createTokenFromClaims(JwtClaims jwtClaims, Map<String, String> headers) {
