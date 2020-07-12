@@ -31,10 +31,11 @@ public class TokenGenerator {
         privateKey = new PfxUtil(pfxPath, pfxPassword).getPrivateKey(privateKeyAlias);
     }
 
-    public ApiToken generateApiToken(String applicationId, String externalClientRoleName) {
+    public ApiToken generateApiToken(UUID organizationId, String applicationId, String externalClientRoleName) {
         return generateToken(API_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(APPLICATION_ID_CLAIM, applicationId);
+                    put(ORGANIZATION_ID_CLAIM, organizationId.toString());
                     put(ROLE_CLAIM, externalClientRoleName);
                 }},
                 Collections.emptyMap());
