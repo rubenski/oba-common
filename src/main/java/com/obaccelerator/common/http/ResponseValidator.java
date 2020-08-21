@@ -4,5 +4,5 @@ import org.apache.http.HttpResponse;
 
 public interface ResponseValidator {
 
-    void validate(HttpResponse httpResponse);
+    void validate(HttpResponse httpResponse) throws ResponseValidationException;
 }

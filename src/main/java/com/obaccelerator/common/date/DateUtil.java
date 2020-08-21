@@ -18,8 +18,22 @@ public class DateUtil {
         return sqlDate.toInstant().atZone(DateUtil.UTCZoneId).toLocalDateTime();
     }
 
+    public static ZonedDateTime sqlDateToZonedDateTime(java.sql.Date sqlDate, String timeZone) {
+        return sqlDate.toInstant().atZone(ZoneId.of(timeZone));
+    }
+
     public static String currentDateTimeUtcForMysql() {
         return ZonedDateTime.now(ZoneOffset.UTC).format(MYSQL_DATETIME_FORMATTER);
+    }
+
+    public static String offsetDateTimeToMysql(OffsetDateTime time) {
+        return time.format(MYSQL_DATETIME_FORMATTER);
+    }
+
+    public static String epochMsToUtcForMysql(long ms) {
+        Instant instant = Instant.ofEpochMilli(ms);
+        ZonedDateTime utc = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC);
+        return utc.format(MYSQL_DATETIME_FORMATTER);
     }
 
     public static LocalDateTime utcLocalDateTimeNow() {
@@ -35,10 +49,9 @@ public class DateUtil {
     }
 
     public static OffsetDateTime mysqlUtcDateTimeToOffsetDateTime(String mysqlDateTime) {
-        if(mysqlDateTime == null) {
+        if (mysqlDateTime == null) {
             return null;
         }
         return LocalDateTime.parse(mysqlDateTime, DateUtil.MYSQL_DATETIME_FORMATTER).atOffset(ZoneOffset.UTC);
     }
-
 }

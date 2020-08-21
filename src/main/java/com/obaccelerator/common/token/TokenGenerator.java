@@ -41,10 +41,11 @@ public class TokenGenerator {
                 Collections.emptyMap());
     }
 
-    public ApiToken generateApplicationToken(String applicationId) {
+    public ApiToken generateInternalApplicationToken(String organizationId, String applicationId) {
         return generateToken(INTERNAL_TOKEN_VALIDITY_MS,
                 new HashMap<String, String>() {{
                     put(APPLICATION_ID_CLAIM, applicationId);
+                    put(ORGANIZATION_ID_CLAIM, organizationId);
                     put(ROLE_CLAIM, APPLICATION);
                 }},
                 Collections.emptyMap());

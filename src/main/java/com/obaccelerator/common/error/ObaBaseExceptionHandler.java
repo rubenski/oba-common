@@ -109,7 +109,7 @@ public abstract class ObaBaseExceptionHandler {
     }
 
     @ExceptionHandler(value = HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ObaErrorMessage> handleMissingRequestHeaderException(HttpRequestMethodNotSupportedException e, WebRequest webRequest) {
+    public ResponseEntity<ObaErrorMessage> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e, WebRequest webRequest) {
         ObaErrorMessage errorMessage = new ObaErrorMessage(ObaError.OBA_REQUEST_METHOD_NOT_SUPPORTED);
         return handleAsError(errorMessage, e);
     }

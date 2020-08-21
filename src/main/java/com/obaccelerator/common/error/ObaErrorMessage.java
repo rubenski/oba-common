@@ -1,6 +1,5 @@
 package com.obaccelerator.common.error;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.obaccelerator.common.date.DateUtil;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,6 @@ public class ObaErrorMessage {
 
     private OffsetDateTime timestamp = DateUtil.utcOffsetDateTimeNow();
     private List<FieldError> fieldErrors;
-    private String errorCode;
     private String message;
     private int status;
     private String code;

@@ -65,7 +65,7 @@ public class TokenValidator {
             throw new ApiTokenInvalidRoleClaimException();
         }
 
-        if (claims.size() != 5 || iat == null || (isBlank(applicationId) && isBlank(organizationId)) || isBlank((String) jti) ||
+        if (iat == null || (isBlank(applicationId) && isBlank(organizationId)) || isBlank((String) jti) ||
                 exp == null) {
             throw new ApiTokenMissingOrInvalidClaimsException();
         }

@@ -9,35 +9,31 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Clients don't have to provide a token on open endpoints
+ */
 @Getter
 public enum OpenEndpoint {
 
-    GET_TOKENS(RequestMethod.GET.name(), "/tokens"),
-    POST_ORGANIZATIONS(RequestMethod.POST.name(), "/organizations"),
-    POST_SESSIONS(RequestMethod.POST.name(), "/sessions");
+    GET_TOKENS(RequestMethod.GET.name(), Pattern.compile("^/tokens$")),
+    POST_ORGANIZATIONS(RequestMethod.POST.name(), Pattern.compile("^/organizations$")),
+    POST_SESSIONS(RequestMethod.POST.name(), Pattern.compile("^/sessions$")),
+    GET_LOGOS(RequestMethod.GET.name(), Pattern.compile("^/logos/[A-Za-z0-9-+%]+?\\.png$"));
 
-    private static final Map<String, Pattern> CACHE = new HashMap<>();
     private final String method;
-    private final String path;
+    private final Pattern pattern;
 
-    OpenEndpoint(String method, String path) {
+    OpenEndpoint(String method, Pattern pattern) {
         this.method = method;
-        this.path = path;
+        this.pattern = pattern;
     }
 
-    public static boolean isOpenEndpoint(HttpServletRequest request)  {
+    public static boolean isOpenEndpoint(HttpServletRequest request) {
         String requestUri = request.getRequestURI();
         String method = request.getMethod();
         for (OpenEndpoint endpoint : OpenEndpoint.values()) {
             if (method.equals(endpoint.getMethod())) {
-                String path = endpoint.getPath();
-                String urlPattern = path.replaceAll("\\{[0-9a-zA-Z-]+}", "[0-9A-Za-z-]+?");
-                Pattern regexPattern = CACHE.get(urlPattern);
-                if (regexPattern == null) {
-                    regexPattern = Pattern.compile(urlPattern);
-                }
-                CACHE.put(urlPattern, regexPattern);
-                Matcher matcher = regexPattern.matcher(requestUri);
+                Matcher matcher = endpoint.pattern.matcher(requestUri);
                 boolean matches = matcher.matches();
                 if (matches) {
                     return true;

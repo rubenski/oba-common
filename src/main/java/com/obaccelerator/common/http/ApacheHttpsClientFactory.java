@@ -107,7 +107,7 @@ public class ApacheHttpsClientFactory {
         try {
             if (input.isMtls()) {
                 // Load the keystore with client cert and private key. This will be an eIDAS client cert and key in PSD2 scenarios.
-                sslContextBuilder.loadKeyMaterial(getKeyStore(input), input.getKeyStorePw().toCharArray());
+                sslContextBuilder.loadKeyMaterial(getKeyStore(input), input.getKeyStorePw() == null ? null : input.getKeyStorePw().toCharArray());
             }
 
             // Load the trusted servers

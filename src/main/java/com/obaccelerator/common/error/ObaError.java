@@ -38,9 +38,30 @@ public enum ObaError {
 
     // Api Registration
     API_REGISTRATION_FORM_INVALID("REG001", REG001, REG001, 400),
+    API_REGISTRATION_NOT_FOUND_FOR_ORGANIZATION("REG002", REG002, REG002, 400),
 
     // Api
     OBA_NO_API_FOR_BANK("API001", "No API for bank", "No API was registered in the Spring context for this bank", 500),
+
+    // Refresh task
+    REFRESH_TASK_USER_HAS_NO_REFRESHABLE_CONNECTIONS("RFT001", RFT001, RFT001, 400),
+
+    // Consent session
+    CONSENT_EXPECTED_PARAM_MISSING_FROM_REDIRECT_URL("CST001", CST001, CST001, 400),
+    CONSENT_SESSION_NOT_FOUND("CST002", CST002, CST002, 400),
+    CONSENT_SESSION_ALREADY_CLOSED("CST003", CST003, CST003, 400),
+    CONSENT_SESSION_ALREADY_EXISTS_FOR_STATE_PARAM("CST004", CST004, CST004, 400),
+    CONSENT_ERROR_WHILE_OBTAINING_ACCESS_TOKEN("CST005", CST005, CST005, 500),
+    CONSENT_STATE_PARAM_MISSING("CST006", CST006, CST006, 400),
+    CONSENT_STATE_PARAM_INVALID_NO_UUID("CST007", CST007, CST007, 400),
+
+    // Connection
+    CONNECTION_CANT_CREATE_CONNECTION_FOR_UNSUCCESSFUL_CONSENT_SESSION("CON001", CON001, CON001, 400),
+    CONNECTION_CONSENT_SESSION_NOT_FOUND("CON002", CON002, CON002, 400),
+    CONNECTION_ALREADY_EXISTS_FOR_STATE_ID("CON003", CON003, CON003, 400),
+
+    // Redirect URL
+    REDIRECT_URL_NOT_FOUND("URL001", URL001, URL001, 400),
 
     // OBA Generic
     OBA_TECHNICAL_ERROR("OBA001", TECHNICAL_ERROR, TECHNICAL_ERROR, 500),
@@ -57,6 +78,9 @@ public enum ObaError {
     OBA_ACCESS_DENIED("OBA012", OBA012, OBA012, 403),
     OBA_REQUEST_METHOD_NOT_SUPPORTED("OBA13", OBA013, OBA013, 405),
 
+    // Security events
+    SEM_ILLEGAL_USER_DATA_ACCESS_ATTEMPT("SEM001", "Unauthorized", "Illegal access attempt", 403),
+
     /**
      * OBA Gateway errors
      */
@@ -68,7 +92,6 @@ public enum ObaError {
     GATEWAY_NOT_FOUND("GTW006", GTW006, GTW006, 404),
     GATEWAY_TECHNICAL_ERROR("GTW007", GTW007, GTW007, 500),
     GATEWAY_API_TOKEN_INVALID_ROLE_CLAIM("GTW008", GTW008, GTW008, 403),
-
 
     /**
      * OBA portal errors
@@ -99,7 +122,6 @@ public enum ObaError {
         // Application
         public static final String APP001 = "Application id in token and uri do not match";
         public static final String APP002 = "You have reached the maximum number of allowed keys";
-        public static final String APP003 = "Key id already exists";
         public static final String APP004 = "Public key value is not a valid public key";
         public static final String APP005 = "Application is not onboarded with bank";
         public static final String APP006 = "Bank is disabled";
@@ -124,6 +146,7 @@ public enum ObaError {
 
         // API registration
         public static final String REG001 = "API registration form validation failed";
+        public static final String REG002 = "Api registration not found for organization";
 
         // Gateway
         public static final String GTW001 = "API token signature invalid";
@@ -135,9 +158,29 @@ public enum ObaError {
         public static final String GTW007 = "Technical error";
         public static final String GTW008 = "API token has an invalid role claim";
 
+        // Refresh tasks
+        public static final String RFT001 = "User has no refreshable connections";
+
+        // Consent session
+        public static final String CST001 = "Required param missing from consent URL";
+        public static final String CST002 = "Consent session not found";
+        public static final String CST003 = "Consent session is already closed";
+        public static final String CST004 = "Consent session already exists for this state parameter";
+        public static final String CST005 = "Error while obtaining access token from bank";
+        public static final String CST006 = "State param missing";
+        public static final String CST007 = "State param invalid, no UUID";
+
+        // Connection
+        public static final String CON001 = "Can't create connection for the provided unsuccessful consent session";
+        public static final String CON002 = "Consent session not found for this state id. Cannot create connection";
+        public static final String CON003 = "A connection already exists for this consent session's state id";
+
+        // Redirect URL
+        public static final String URL001 = "Provided redirect URL not found";
+
         // Portal
         public static final String PRT003 = "Registration already exists";
-        public static final String PRT004 = "Session missing";
+        public static final String PRT004 = "Session t okmissing";
         public static final String PRT005 = "Not authorized";
 
     }
