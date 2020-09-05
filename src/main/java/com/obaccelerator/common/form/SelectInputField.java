@@ -21,7 +21,6 @@ public class SelectInputField extends FieldDefinition {
     public static class SelectListOption {
         String value;
         String label;
-        boolean selected;
     }
 
     @Override

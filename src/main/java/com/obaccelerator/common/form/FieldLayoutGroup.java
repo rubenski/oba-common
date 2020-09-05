@@ -10,18 +10,11 @@ import java.util.List;
 @Getter
 public class FieldLayoutGroup {
 
-    public FieldLayoutGroup(String groupTitle, LayoutDirection layoutDirection, List<FieldDefinition> fields) {
-        this.groupTitle = groupTitle;
-        this.layoutDirection = layoutDirection;
-        this.fields = fields;
-    }
-
-    public FieldLayoutGroup(LayoutDirection layoutDirection, List<FieldDefinition> fields) {
-        this.layoutDirection = layoutDirection;
-        this.fields = fields;
-    }
-
-    private String groupTitle;
-    private LayoutDirection layoutDirection;
     private List<FieldDefinition> fields = new ArrayList<>();
+
+    public FieldLayoutGroup(List<FieldDefinition> fields) {
+        this.fields = fields;
+    }
+
+
 }

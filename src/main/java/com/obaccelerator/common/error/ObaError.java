@@ -45,6 +45,8 @@ public enum ObaError {
 
     // Refresh task
     REFRESH_TASK_USER_HAS_NO_REFRESHABLE_CONNECTIONS("RFT001", RFT001, RFT001, 400),
+    REFRESH_TASK_CONNECTIONS_NOT_FOUND("RFT002", RFT002, RFT002, 400),
+
 
     // Consent session
     CONSENT_EXPECTED_PARAM_MISSING_FROM_REDIRECT_URL("CST001", CST001, CST001, 400),
@@ -59,6 +61,10 @@ public enum ObaError {
     CONNECTION_CANT_CREATE_CONNECTION_FOR_UNSUCCESSFUL_CONSENT_SESSION("CON001", CON001, CON001, 400),
     CONNECTION_CONSENT_SESSION_NOT_FOUND("CON002", CON002, CON002, 400),
     CONNECTION_ALREADY_EXISTS_FOR_STATE_ID("CON003", CON003, CON003, 400),
+
+    // Transactions
+    TRANSACTIONS_ILLEGAL_DATE_FORMAT("TRX001", TRX001, TRX001, 400),
+    TRANSACTIONS_ILLEGAL_DATE_RANGE("TRX002", TRX001, TRX001, 400),
 
     // Redirect URL
     REDIRECT_URL_NOT_FOUND("URL001", URL001, URL001, 400),
@@ -77,6 +83,7 @@ public enum ObaError {
     OBA_FILTER_ERROR("OBA011", OBA011, "An exception occurred in a filter", 500),
     OBA_ACCESS_DENIED("OBA012", OBA012, OBA012, 403),
     OBA_REQUEST_METHOD_NOT_SUPPORTED("OBA13", OBA013, OBA013, 405),
+    OBA_REQUIRED_REQUEST_PARAMETERS_MISSING("OBA014", OBA014, OBA014, 400),
 
     // Security events
     SEM_ILLEGAL_USER_DATA_ACCESS_ATTEMPT("SEM001", "Unauthorized", "Illegal access attempt", 403),
@@ -118,6 +125,7 @@ public enum ObaError {
         public static final String OBA011 = "Technical error";
         public static final String OBA012 = "Access denied";
         public static final String OBA013 = "Request method not supported";
+        public static final String OBA014 = "Required request parameter(s) missing";
 
         // Application
         public static final String APP001 = "Application id in token and uri do not match";
@@ -160,20 +168,25 @@ public enum ObaError {
 
         // Refresh tasks
         public static final String RFT001 = "User has no refreshable connections";
+        public static final String RFT002 = "One or more connections in the refresh task were not found";
 
         // Consent session
         public static final String CST001 = "Required param missing from consent URL";
         public static final String CST002 = "Consent session not found";
-        public static final String CST003 = "Consent session is already closed";
+        public static final String CST003 = "Consent session is closed";
         public static final String CST004 = "Consent session already exists for this state parameter";
         public static final String CST005 = "Error while obtaining access token from bank";
         public static final String CST006 = "State param missing";
         public static final String CST007 = "State param invalid, no UUID";
 
         // Connection
-        public static final String CON001 = "Can't create connection for the provided unsuccessful consent session";
+        public static final String CON001 = "Can't create connection for unfinished or unsuccessful consent session";
         public static final String CON002 = "Consent session not found for this state id. Cannot create connection";
         public static final String CON003 = "A connection already exists for this consent session's state id";
+
+        // Transactions
+        public static final String TRX001 = "Invalid date format in date range param(s)";
+        public static final String TRX002 = "Invalid date range provided";
 
         // Redirect URL
         public static final String URL001 = "Provided redirect URL not found";

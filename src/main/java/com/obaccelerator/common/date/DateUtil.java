@@ -1,5 +1,6 @@
 package com.obaccelerator.common.date;
 
+import java.sql.Date;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -28,6 +29,11 @@ public class DateUtil {
 
     public static String offsetDateTimeToMysql(OffsetDateTime time) {
         return time.format(MYSQL_DATETIME_FORMATTER);
+    }
+
+    public static java.sql.Date offsetDateTimeToMysqlDate(OffsetDateTime time) {
+        java.sql.Date date = new Date(time.toEpochSecond());
+        return date;
     }
 
     public static String epochMsToUtcForMysql(long ms) {
