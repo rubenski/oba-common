@@ -42,6 +42,10 @@ public class FormDefinition {
         this.fieldLayoutGroups = fieldLayoutGroups;
     }
 
+    /**
+     * TODO: This is no longer used, but it ultimately calls validation... We MUST call validation on the form fields!!!
+     * @param submittedForm
+     */
     public void applySubmittedForm(SubmittedForm submittedForm) {
         fieldLayoutGroups.stream()
                 .flatMap(flg -> flg.getFields().stream())

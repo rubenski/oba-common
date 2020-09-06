@@ -28,7 +28,6 @@ public class CheckBoxesField extends FieldDefinition {
     public static class CheckBoxValue {
         String label;
         String value;
-        boolean selected;
     }
 
     @Value
