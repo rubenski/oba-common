@@ -4,8 +4,6 @@ import lombok.Getter;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +16,7 @@ public enum OpenEndpoint {
     GET_TOKENS(RequestMethod.GET.name(), Pattern.compile("^/tokens$")),
     POST_ORGANIZATIONS(RequestMethod.POST.name(), Pattern.compile("^/organizations$")),
     POST_SESSIONS(RequestMethod.POST.name(), Pattern.compile("^/sessions$")),
-    GET_LOGOS(RequestMethod.GET.name(), Pattern.compile("^/logos/[A-Za-z0-9-+%]+?\\.png$"));
+    GET_LOGOS(RequestMethod.GET.name(), Pattern.compile("^/logos/[A-Za-z0-9-_+%]+?\\.png$"));
 
     private final String method;
     private final Pattern pattern;
