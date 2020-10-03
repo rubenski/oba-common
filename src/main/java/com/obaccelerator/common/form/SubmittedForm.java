@@ -54,4 +54,14 @@ public class SubmittedForm {
                 .collect(Collectors.toList());
         values.removeAll(submittedSecrets);
     }
+
+    public String getSingularValue(String key) {
+        for (SubmittedValue value : values) {
+            if (value.getKey().equals(key)) {
+                return value.getValues().get(0);
+            }
+        }
+        throw new IllegalArgumentException("Field '" + key + "' not found");
+    }
+
 }

@@ -171,7 +171,8 @@ public enum ObaError {
         public static final String RFT002 = "One or more connections in the refresh task were not found";
 
         // Consent session
-        public static final String CST001 = "Required param missing from consent URL";
+        public static final String CST001 = "An expected parameter was missing from the user's return URL. " +
+                "The user may have denied consent at the bank or there may be a technical problem at the bank.";
         public static final String CST002 = "Consent session not found";
         public static final String CST003 = "Consent session is closed";
         public static final String CST004 = "Consent session already exists for this state parameter";

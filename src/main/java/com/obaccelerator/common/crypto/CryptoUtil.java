@@ -167,7 +167,7 @@ public class CryptoUtil {
             KeyFactory kf = KeyFactory.getInstance("RSA");
             return kf.generatePrivate(keySpec);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error while creating PrivateKey from String");
+            throw new RuntimeException("Error while creating PrivateKey from String", e);
         }
     }
 

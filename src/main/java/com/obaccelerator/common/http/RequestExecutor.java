@@ -16,6 +16,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 @Slf4j
 public class RequestExecutor<I, O> {
 
@@ -81,8 +83,10 @@ public class RequestExecutor<I, O> {
                             for (Header header : request.getAllHeaders()) {
                                 log.info("Request header: {} : {}", header.getName(), header.getValue());
                             }
-                            log.info("Request body: " + getRequestBodyAsString(request));
-                            log.info("Response body: " + getResponseBodyAsString(response));
+                            log.info("Request body: {}", getRequestBodyAsString(request));
+                            log.info("Response status {}", response.getStatusLine());
+                            String responseBodyAsString = getResponseBodyAsString(response);
+                            log.info("Response body: {}", isNotBlank(responseBodyAsString) ? responseBodyAsString : null);
                         }
                         throw e;
                     }
@@ -94,7 +98,7 @@ public class RequestExecutor<I, O> {
                 //  performance will be achieved if we don't convert to String first, that is, use Jackon JsonParser,
                 //  but it is tedious work
                 try {
-                    if(Void.class.equals(targetClass)) {
+                    if (Void.class.equals(targetClass)) {
                         return null;
                     }
                     return MAPPER.readValue(responseBodyAsString, targetClass);
@@ -109,7 +113,7 @@ public class RequestExecutor<I, O> {
     }
 
     private String getRequestBodyAsString(HttpUriRequest request) {
-        if(request instanceof HttpEntityEnclosingRequest) {
+        if (request instanceof HttpEntityEnclosingRequest) {
             HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
             return getContent(entity);
         }
