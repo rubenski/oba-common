@@ -16,10 +16,10 @@ public class TextInputField extends FieldDefinition {
     public TextInputField(String key, LabelExplanation labelExplanation, int minLength, int maxLength, boolean required, boolean secret) {
         super(key, labelExplanation, FieldType.TEXT);
 
-        if(secret && minLength < SECRET_VALUE.length()) {
+        if (secret && minLength < SECRET_VALUE.length()) {
             throw new IllegalArgumentException("The min length of a secret input field cannot be smaller than the length " +
-                    "of SECRET_VALUE. SECRET_VALUE is displayed as a placeholder in the view. Form validation in the " +
-                    "view will fail of minLength is smaller than the length of SECRET_VALUE and the submit button " +
+                    "of SECRET_VALUE (" + SECRET_VALUE.length() + ") SECRET_VALUE is displayed as a placeholder in the view. " +
+                    "Form validation in the view will fail of minLength is smaller than the length of SECRET_VALUE and the submit button " +
                     "will remain inactive as a result.");
         }
 
@@ -30,11 +30,11 @@ public class TextInputField extends FieldDefinition {
     }
 
     public static TextInputField getClientSecretField() {
-        return new TextInputField("client_secret", new LabelExplanation("Client Secret"), 3, 300, true, true);
+        return new TextInputField("client_secret", new LabelExplanation("Client Secret"), 10, 300, true, true);
     }
 
     public static TextInputField getClientIdField() {
-        return new TextInputField("client_id", new LabelExplanation("Client ID"), 3, 300, true, false);
+        return new TextInputField("client_id", new LabelExplanation("Client ID"), 10, 300, true, false);
     }
 
     public void markSecret() {

@@ -12,7 +12,6 @@ public class ExpectedHttpCodesValidator implements ResponseValidator {
         this.validCodes = validCodes;
     }
 
-
     @Override
     public void validate(HttpResponse httpResponse) {
         int statusCode = httpResponse.getStatusLine().getStatusCode();
@@ -21,6 +20,6 @@ public class ExpectedHttpCodesValidator implements ResponseValidator {
                 return;
             }
         }
-        throw new ResponseValidationException("Received invalid HTTP status " + statusCode);
+        throw new UnexpectedHttpCodeException(statusCode);
     }
 }
