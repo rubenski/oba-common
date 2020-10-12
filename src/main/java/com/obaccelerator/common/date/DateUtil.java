@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 public class DateUtil {
 
 
@@ -69,5 +71,28 @@ public class DateUtil {
         }
         LocalDateTime parsed = LocalDateTime.parse(mysqlDateTime, DateUtil.MYSQL_DATETIME_FORMATTER);
         return parsed.atZone(ZoneId.of(timeZone));
+    }
+
+    public static ZonedDateTime zonedDatTimeToUtcTimeZone(ZonedDateTime time) {
+        if (time == null) {
+            return null;
+        }
+        return ZonedDateTime.of(time.toLocalDateTime(), ZoneOffset.UTC);
+    }
+
+    public static OffsetDateTime dateStringToOffsetDateTime(String date, String pattern, String timeZone) {
+        if (isBlank(date)) {
+            return null;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return LocalDate.parse(date, formatter).atStartOfDay(ZoneId.of(timeZone)).toOffsetDateTime();
+    }
+
+    public static OffsetDateTime dateTimeStringToOffsetDateTime(String date, String pattern, String timeZone) {
+        if (isBlank(date)) {
+            return null;
+        }
+        OffsetDateTime parse = OffsetDateTime.parse(date, DateTimeFormatter.ofPattern(pattern));
+        return parse.atZoneSameInstant(ZoneId.of(timeZone)).toOffsetDateTime();
     }
 }

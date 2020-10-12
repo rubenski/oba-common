@@ -190,7 +190,7 @@ public enum ObaError {
         public static final String TRX002 = "Invalid date range provided";
 
         // Redirect URL
-        public static final String URL001 = "Provided redirect URL not found";
+        public static final String URL001 = "Provided redirect URL is unknown";
 
         // Portal
         public static final String PRT003 = "Registration already exists";

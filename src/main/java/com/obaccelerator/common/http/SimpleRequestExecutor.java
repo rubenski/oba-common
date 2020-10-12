@@ -1,5 +1,6 @@
 package com.obaccelerator.common.http;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -27,6 +28,7 @@ public class SimpleRequestExecutor {
     static {
         MAPPER = new ObjectMapper();
         MAPPER.findAndRegisterModules();
+        MAPPER.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
     }
 
     private SimpleRequestExecutor() {
