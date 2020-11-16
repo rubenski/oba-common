@@ -1,16 +1,6 @@
-image: docker:latest
-services:
-  - docker:dind
 
 stages:
   - build
-
-variables:
-  DOCKER_HOST: tcp://docker:2376
-  DOCKER_TLS_CERTDIR: "/certs"
-  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
-  DOCKER_DRIVER: overlay
 
 build-maven:
   image: maven:3-jdk-8
