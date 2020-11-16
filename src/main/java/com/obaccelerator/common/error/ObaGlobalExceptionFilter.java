@@ -5,13 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.obaccelerator.common.error.ObaError.OBA_FILTER_ERROR;
+import static com.obaccelerator.common.error.ObaError.SPRING_SECURITY_FILTER_CHAIN_EXCEPTION;
 
 /**
  * This filter wraps the entire Spring filter chain and catches any exception thrown
@@ -25,10 +24,6 @@ import static com.obaccelerator.common.error.ObaError.OBA_FILTER_ERROR;
 @Slf4j
 public class ObaGlobalExceptionFilter implements Filter {
 
-    public ObaGlobalExceptionFilter() {
-        String test = "";
-    }
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -39,7 +34,7 @@ public class ObaGlobalExceptionFilter implements Filter {
         try {
             filterChain.doFilter(request, response);
         } catch(Throwable t) {
-            ObaErrorMessage errorMessage = new ObaErrorMessage(OBA_FILTER_ERROR);
+            ObaErrorMessage errorMessage = new ObaErrorMessage(SPRING_SECURITY_FILTER_CHAIN_EXCEPTION);
             log.error("ObaGlobalExceptionFilter caught an exception", t);
             HttpServletResponse resp = (HttpServletResponse) response;
             resp.setStatus(500);

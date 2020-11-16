@@ -49,7 +49,6 @@ public enum ObaError {
 
 
     // Consent session
-    CONSENT_EXPECTED_PARAM_MISSING_FROM_REDIRECT_URL("CST001", CST001, CST001, 400),
     CONSENT_SESSION_NOT_FOUND("CST002", CST002, CST002, 400),
     CONSENT_SESSION_ALREADY_CLOSED("CST003", CST003, CST003, 400),
     CONSENT_SESSION_ALREADY_EXISTS_FOR_STATE_PARAM("CST004", CST004, CST004, 400),
@@ -80,13 +79,14 @@ public enum ObaError {
     OBA_INVALID_CONTENT_TYPE("OBA008", OBA008, OBA008, 400),
     OBA_DB_INTEGRITY_CONSTRAINT_VIOLATION_EXCEPTION("OBA009", TECHNICAL_ERROR, "Db integrity constraint violation", 500),
     OBA_MISSING_AUTHORIZATION_HEADER_ERROR("OBA010", OBA010, OBA010, 400),
-    OBA_FILTER_ERROR("OBA011", OBA011, "An exception occurred in a filter", 500),
+    SPRING_SECURITY_FILTER_CHAIN_EXCEPTION("OBA011", OBA011, "An exception occurred in a filter", 500),
     OBA_ACCESS_DENIED("OBA012", OBA012, OBA012, 403),
     OBA_REQUEST_METHOD_NOT_SUPPORTED("OBA13", OBA013, OBA013, 405),
     OBA_REQUIRED_REQUEST_PARAMETERS_MISSING("OBA014", OBA014, OBA014, 400),
 
     // Security events
     SEM_ILLEGAL_USER_DATA_ACCESS_ATTEMPT("SEM001", "Unauthorized", "Illegal access attempt", 403),
+
 
     /**
      * OBA Gateway errors
@@ -179,6 +179,7 @@ public enum ObaError {
         public static final String CST005 = "Error while obtaining access token from bank";
         public static final String CST006 = "State param missing";
         public static final String CST007 = "State param invalid, no UUID";
+        public static final String CST008 = "The user did not manage to authenticate or did not provide consent at the bank";
 
         // Connection
         public static final String CON001 = "Can't create connection for unfinished or unsuccessful consent session";
@@ -196,6 +197,7 @@ public enum ObaError {
         public static final String PRT003 = "Registration already exists";
         public static final String PRT004 = "Session t okmissing";
         public static final String PRT005 = "Not authorized";
+
 
     }
 
