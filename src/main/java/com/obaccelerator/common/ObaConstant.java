@@ -21,7 +21,7 @@ public class ObaConstant {
     public static final String REDIRECT_URLS_KEY = "redirect_urls";
     public static final String SECRET_VALUE = "**********";
 
-    public static final String BLA = "BLABLA";
+    public static final String BLA = "BLABLAll";
 
 
 }
