@@ -26,6 +26,19 @@
         <jackson.version>2.11.0</jackson.version>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>central</id>
+            <name>ip-172-31-36-117-releases</name>
+            <url>https://ec2-52-57-98-135.eu-central-1.compute.amazonaws.com/artifactory/libs-release</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>ip-172-31-36-117-snapshots</name>
+            <url>https://ec2-52-57-98-135.eu-central-1.compute.amazonaws.com/artifactory/libs-snapshot</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.tomitribe</groupId>
