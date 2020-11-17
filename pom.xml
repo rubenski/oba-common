@@ -14,7 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <jjwt.version>0.9.1</jjwt.version>
-        <spring.version>5.1.7.RELEASE</spring.version>
+        <spring.version>5.3.1</spring.version>
         <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
         <lombok.version>1.18.8</lombok.version>
         <servlet.api.version>2.5</servlet.api.version>
