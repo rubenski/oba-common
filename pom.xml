@@ -21,7 +21,7 @@
         <spring.cloud.vault.version>2.1.1.RELEASE</spring.cloud.vault.version>
         <mysql.driver.version>8.0.16</mysql.driver.version>
         <apache.commons.lang.version>3.9</apache.commons.lang.version>
-        <apache.commons.io.version>2.6</apache.commons.io.version>
+        <apache.commons.io.version>2.7</apache.commons.io.version>
         <!-- Jackson is also provided by Spring boot, version 2.11.0 -->
         <jackson.version>2.11.0</jackson.version>
     </properties>
