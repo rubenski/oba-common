@@ -23,7 +23,7 @@
         <apache.commons.lang.version>3.9</apache.commons.lang.version>
         <apache.commons.io.version>2.6</apache.commons.io.version>
         <!-- Jackson is also provided by Spring boot, version 2.11.0 -->
-        <jackson.version>2.11.0</jackson.version>
+        <jackson.version>2.12.7.1</jackson.version>
     </properties>
 
     <distributionManagement>
